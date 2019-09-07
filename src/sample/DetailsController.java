@@ -8,25 +8,28 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.ArrayList;
+public class DetailsController {
 
-public class StudentController {
 
-    public TableColumn<Grades, String> classColumn;
+    public TableView<Grades> studentTableView;
+    public TableColumn<Grades,String> classColumn;
     public TableColumn pointsColumn;
     public TableColumn gradeColumn;
-    public TableView<Grades> studentTableView;
-    private ObservableList<Grades> student;
-
+    ObservableList<Grades> students;
 
     @FXML
     public void initialize() {
         Model model=new Model();
         model.load();
-        student = FXCollections.observableArrayList(model.getPerson().getGrades());
-        studentTableView.setItems(student);
+        students = FXCollections.observableArrayList(model.getPerson().getGrades());
+        studentTableView.setItems(students);
         pointsColumn.setCellValueFactory(new PropertyValueFactory("numberOfPoints"));
         gradeColumn.setCellValueFactory(new PropertyValueFactory("grade"));
         classColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSubject().getSubjectName()));
     }
+
+
+
+
+
 }

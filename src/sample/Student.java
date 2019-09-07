@@ -4,17 +4,27 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Student extends Person {
     SimpleStringProperty mothersName=new SimpleStringProperty();
     SimpleStringProperty fathersName=new SimpleStringProperty();
     SimpleIntegerProperty index=new SimpleIntegerProperty();
+    ArrayList<Grades> grades=new ArrayList<>();
+
+    public ArrayList<Grades> getGrades() {
+        return grades;
+    }
+
+    public void setGrades(ArrayList<Grades> grades) {
+        this.grades = grades;
+    }
 
     public Student() {
     }
 
-    public Student(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth, String mothersName, String fathersName, int index) {
-        super(name, surname, jmbg, placeOfBirth, livingPlace, dateOfBirth);
+    public Student(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth, String mothersName, String fathersName, int index,int id) {
+        super(name, surname, jmbg, placeOfBirth, livingPlace, dateOfBirth,id);
         this.mothersName =new SimpleStringProperty(mothersName);
         this.fathersName = new SimpleStringProperty(fathersName);
         this.index = new SimpleIntegerProperty(index);
