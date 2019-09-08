@@ -23,7 +23,7 @@ public class StudentController {
     public void initialize() {
         Model model=new Model();
         model.load();
-        student = FXCollections.observableArrayList(model.getPerson().getGrades());
+        student = FXCollections.observableArrayList((((Student) model.getPerson()).getGrades()));
         studentTableView.setItems(student);
         pointsColumn.setCellValueFactory(new PropertyValueFactory("numberOfPoints"));
         gradeColumn.setCellValueFactory(new PropertyValueFactory("grade"));

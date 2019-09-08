@@ -20,7 +20,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AdminController">
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="adminTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab fx:id="studentsTab" text="Students">
             <content>
@@ -247,6 +247,9 @@
                                   <Button mnemonicParsing="false" onAction="#addClassAction" text="Add" />
                                     <Button mnemonicParsing="false" onAction="#deleteClassAction" text="Delete" />
                                 </buttons>
+                                 <BorderPane.margin>
+                                    <Insets right="10.0" />
+                                 </BorderPane.margin>
                               </ButtonBar>
                            </bottom>
                         </BorderPane>
@@ -291,6 +294,9 @@
                                     <Button layoutX="450.0" layoutY="18.0" mnemonicParsing="false" onAction="#addUserAction" text="Add user" />
                                     <Button layoutX="450.0" layoutY="18.0" mnemonicParsing="false" onAction="#deleteUserAction" text="Delete user" />
                                 </buttons>
+                                 <BorderPane.margin>
+                                    <Insets right="10.0" />
+                                 </BorderPane.margin>
                               </ButtonBar>
                            </bottom>
                         </BorderPane>

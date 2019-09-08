@@ -1,37 +1,63 @@
 package sample;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Model {
-    ArrayList<Person> users=new ArrayList<>();
-    Student person=new Student();
-    ArrayList<Subject> subjects=new ArrayList<>();
+    ObservableList<Person> users= FXCollections.observableArrayList();
+    ObservableList<Professor> professors=FXCollections.observableArrayList();
+    ObservableList<Student> students=FXCollections.observableArrayList();
+    ObjectProperty<Person> person=new SimpleObjectProperty<>();
+    ObservableList<Subject> subjects=FXCollections.observableArrayList();
 
-    public ArrayList<Subject> getSubjects() {
-        return subjects;
+    public ObservableList<Professor> getProfessors() {
+        return professors;
     }
 
-    public void setSubjects(ArrayList<Subject> subjects) {
-        this.subjects = subjects;
+    public void setProfessors(ObservableList<Professor> professors) {
+        this.professors = professors;
     }
 
-    public void setUsers(ArrayList<Person> users) {
-        this.users = users;
+    public ObservableList<Student> getStudents() {
+        return students;
     }
 
-    public Student getPerson() {
-        return person;
+    public void setStudents(ObservableList<Student> students) {
+        this.students = students;
     }
 
-    public void setPerson(Student student) {
-        this.person = student;
-    }
-
-    public ArrayList<Person> getUsers() {
+    public ObservableList<Person> getUsers() {
         return users;
     }
 
+    public void setUsers(ObservableList<Person> users) {
+        this.users = users;
+    }
+
+    public Person getPerson() {
+        return person.get();
+    }
+
+    public ObjectProperty<Person> personProperty() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person.set(person);
+    }
+
+    public ObservableList<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(ObservableList<Subject> subjects) {
+        this.subjects = subjects;
+    }
 
     public void load()
     {
@@ -45,23 +71,40 @@ public class Model {
         student.setJmbg("43353453");
         student.setLivingPlace("Bugojno");
         student.setPlaceOfBirth("Travnik");
+
+        Student student1=new Student();
+        student1.setName("Harun");
+        student1.setFathersName("Esad");
+        student1.setSurname("Ajkunić");
+        student1.setIndex(12345);
+        student1.setMothersName("Zafira");
+        student1.setDateOfBirth(LocalDate.now());
+        student1.setJmbg("43353453");
+        student1.setLivingPlace("Bugojno");
+        student1.setPlaceOfBirth("Travnik");
+        users.add(student1);
         users.add(student);
         Professor professor=new Professor();
+        professor.setId(44);
         professor.setSurname("Ajkunić");
         professor.setName("admin");
         professor.setDateOfBirth(LocalDate.now());
         professor.setJmbg("43353453");
         professor.setLivingPlace("Bugojno");professor.setPlaceOfBirth("Travnik");
         users.add(professor);
-
-
+        Professor professor1 = new Professor();
+        professor1.setId(111);
+        professor1.setName("Mirza");
+        professor1.setSurname("Gojak");
+        professor1.setDateOfBirth(LocalDate.now());
+        users.add(professor1);
         Subject tp=new Subject();
         tp.setId(1);
-        tp.setProfessor((Professor) users.get(1));
+        tp.setProfessor(professor);
         tp.setSubjectName("Tehnike programiranja");
         Subject ram=new Subject();
         ram.setId(4);
-        ram.setProfessor((Professor) users.get(1));
+        ram.setProfessor(professor);
         ram.setSubjectName("Račuraske arhitekture i mreže");
         subjects.add(tp);
         subjects.add(ram);
@@ -78,9 +121,31 @@ public class Model {
         grades.setSubject(ram);
         student.getGrades().add(grade);
         student.getGrades().add(grades);
+        student1.getGrades().add(grade);
+        student1.getGrades().add(grades);
         this.setPerson(student);
+        professor.getSubjects().add(tp);
+        professor.getSubjects().add(ram);
+
+        for (Person person:users) {
+            if(person instanceof Professor)
+                professors.add((Professor)person);
+            else
+                students.add((Student) person);
+        }
+    }
+    public void removePerson(Person person)
+    {
+        users.removeAll(person);
     }
 
-
+    public void removeByProfessor(Professor professor) {
+        for (int i = 0; i < subjects.size(); i++) {
+            if(subjects.get(i).getProfessor().getId() == professor.getId()) {
+                subjects.remove(subjects.get(i));
+                i--;
+            }
+        }
+    }
 
 }

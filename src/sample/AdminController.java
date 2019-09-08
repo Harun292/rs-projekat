@@ -18,6 +18,7 @@ import javafx.util.converter.NumberStringConverter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class AdminController {
 
@@ -44,24 +45,22 @@ public class AdminController {
     public TextField livingPlaceField;
     public TextField fatherField;
     public TextField motherField;
-    private ObservableList<Person> persons;
+    public Tab studentsTab;
+    public Tab professorsTab;
+    public TabPane adminTabPane;
+    Model model=new Model();
+    ObservableList<Subject> subjects=FXCollections.observableArrayList();
+    ObservableList<Student> students=FXCollections.observableArrayList();
+    ObservableList<Professor> professors=FXCollections.observableArrayList();
     @FXML
-            public void initialize()
-    {
-        Model model=new Model();
+    public void initialize() {
         model.load();
-        persons=FXCollections.observableArrayList(model.getUsers());
-        ObservableList<Student> students=FXCollections.observableArrayList();
-        ObservableList<Professor> professors=FXCollections.observableArrayList();
-        for (Person person:model.getUsers()) {
-            if(person instanceof Professor)
-                professors.add((Professor)person);
-            else
-                students.add((Student) person);
-        }
+        students=FXCollections.observableArrayList(model.getStudents());
+        professors=FXCollections.observableArrayList(model.getProfessors());
+
         userStudentList.setItems(students);
         userProfessorList.setItems(professors);
-        ObservableList<Subject> subjects=FXCollections.observableArrayList(model.getSubjects());
+        subjects=FXCollections.observableArrayList(model.getSubjects());
         classesTable.setItems(subjects);
         classColumn.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getSubjectName()));
         professorColumn.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getProfessor().toString()));
@@ -91,8 +90,10 @@ public class AdminController {
                     professorJmbgField.textProperty().bindBidirectional(newValue.jmbgProperty());
                     professorLivingPlaceField.textProperty().bindBidirectional(newValue.livingPlaceProperty());
             }
+                classesTable.refresh();
+                userProfessorList.refresh();
+                professorList.refresh();
         });
-
         studentsList.setItems(students);
         studentsList.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (oldValue != null) {
@@ -134,19 +135,21 @@ public class AdminController {
 
 
     }
-    
-    
-    
-    
-
     public void addStudentAction(ActionEvent actionEvent) {
+
     }
 
     public void deleteStudentAction(ActionEvent actionEvent) {
+        students.removeAll(studentsList.getSelectionModel().getSelectedItem());
+        studentsList.refresh();
     }
 
     public void detailsAction(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("detailsPanel.fxml"));
+        if(studentsList.getSelectionModel().getSelectedItem() == null) return;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("detailsPanel.fxml"));
+        DetailsController detailsController =new DetailsController(studentsList.getSelectionModel().getSelectedItem());
+        loader.setController(detailsController);
+        Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("Details");
         stage.setScene(new Scene(root));
@@ -157,25 +160,97 @@ public class AdminController {
     }
 
     public void deleteProfesorAction(ActionEvent actionEvent) {
+        model.removeByProfessor(professorList.getSelectionModel().getSelectedItem());
+        professors.removeAll(professorList.getSelectionModel().getSelectedItem());
+        subjects=FXCollections.observableArrayList(model.getSubjects());
+        professorList.refresh();
+        classesTable.setItems(subjects);
+        classesTable.refresh();
     }
 
     public void classesAction(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("classesList.fxml"));
+        if(professorList.getSelectionModel().getSelectedItem() == null) return;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("classesPanel.fxml"));
+        classesListController classesListController =new classesListController(professorList.getSelectionModel().getSelectedItem());
+        loader.setController(classesListController);
+        Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("Details");
         stage.setScene(new Scene(root));
         stage.show();
     }
 
-    public void addClassAction(ActionEvent actionEvent) {
+    public void addClassAction(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("addClassPanel.fxml"));
+        addClassController add=new addClassController();
+        loader.setController(add);
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Details");
+        stage.setScene(new Scene(root));
+        stage.show();
+            stage.setOnHiding(event -> {
+                Subject subject = add.getSubject();
+                if (subject != null) {
+                    subjects.add(subject);
+                    classesTable.setItems(subjects);
+                    classesTable.refresh();
+                    for (Professor profesor : professors
+                            ) {
+                        if(profesor.getId() == subject.getProfessor().getId()) {
+                            profesor.getSubjects().add(subject);
+                        }
+                    }
+
+                }
+            });
+
+
     }
 
     public void deleteClassAction(ActionEvent actionEvent) {
+        subjects.removeAll(classesTable.getSelectionModel().selectedItemProperty().get());
+        classesTable.refresh();
     }
 
-    public void addUserAction(ActionEvent actionEvent) {
+    public void addUserAction(ActionEvent actionEvent) throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Add user");
+        alert.setContentText("Choose type of user");
+
+        ButtonType buttonTypeOne = new ButtonType("Student");
+        ButtonType buttonTypeTwo = new ButtonType("Professor");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonTypeOne){
+            adminTabPane.getSelectionModel().select(studentsTab);
+
+        } else if (result.get() == buttonTypeTwo) {
+            adminTabPane.getSelectionModel().select(professorsTab);
+        } else {
+            alert.close();
+        }
     }
 
     public void deleteUserAction(ActionEvent actionEvent) {
+        if (userStudentList.getSelectionModel().getSelectedItem()!=null) {
+            students.removeAll(userStudentList.getSelectionModel().getSelectedItem());
+            userStudentList.refresh();
+        }
+
+        else {
+            model.removeByProfessor(userProfessorList.getSelectionModel().getSelectedItem());
+            subjects=FXCollections.observableArrayList(model.getSubjects());
+            classesTable.setItems(subjects);
+            classesTable.refresh();
+            professors.removeAll(userProfessorList.getSelectionModel().getSelectedItem());
+
+        }
+            userProfessorList.refresh();
+
+
     }
 }

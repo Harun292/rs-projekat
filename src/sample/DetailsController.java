@@ -15,14 +15,18 @@ public class DetailsController {
     public TableColumn<Grades,String> classColumn;
     public TableColumn pointsColumn;
     public TableColumn gradeColumn;
-    ObservableList<Grades> students;
+    private Student student;
+    ObservableList<Grades> grades;
+
+    public DetailsController(Student student) {
+        this.student=student;
+    }
 
     @FXML
     public void initialize() {
-        Model model=new Model();
-        model.load();
-        students = FXCollections.observableArrayList(model.getPerson().getGrades());
-        studentTableView.setItems(students);
+
+        grades= FXCollections.observableArrayList(student.getGrades());
+        studentTableView.setItems(grades);
         pointsColumn.setCellValueFactory(new PropertyValueFactory("numberOfPoints"));
         gradeColumn.setCellValueFactory(new PropertyValueFactory("grade"));
         classColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSubject().getSubjectName()));
