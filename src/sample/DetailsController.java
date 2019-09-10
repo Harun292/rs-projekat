@@ -3,10 +3,17 @@ package sample;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class DetailsController {
 
@@ -17,6 +24,7 @@ public class DetailsController {
     public TableColumn gradeColumn;
     private Student student;
     ObservableList<Grades> grades;
+    Model model=Model.getInstance();
 
     public DetailsController(Student student) {
         this.student=student;
@@ -30,6 +38,33 @@ public class DetailsController {
         pointsColumn.setCellValueFactory(new PropertyValueFactory("numberOfPoints"));
         gradeColumn.setCellValueFactory(new PropertyValueFactory("grade"));
         classColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSubject().getSubjectName()));
+    }
+    public void addDetails(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("addDetailsPanel.fxml"));
+        addDetailsController detailsController =new addDetailsController();
+        loader.setController(detailsController);
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Details");
+        stage.setScene(new Scene(root));
+        stage.show();
+        stage.setOnHiding(event -> {
+            Grades grade = detailsController.getGrade();
+            if (grade != null) {
+                model.getById(student.getId()).getGrades().add(grade);
+                grades=FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
+                studentTableView.setItems(grades);
+                studentTableView.refresh();
+            }
+        });
+
+    }
+    public void deleteDetails()
+    {
+        model.getById(student.getId()).getGrades().remove(studentTableView.getSelectionModel().getSelectedItem());
+        grades=FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
+        studentTableView.setItems(grades);
+        studentTableView.refresh();
     }
 
 

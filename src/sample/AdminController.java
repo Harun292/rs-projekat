@@ -48,13 +48,12 @@ public class AdminController {
     public Tab studentsTab;
     public Tab professorsTab;
     public TabPane adminTabPane;
-    Model model=new Model();
+    Model model=Model.getInstance();
     ObservableList<Subject> subjects=FXCollections.observableArrayList();
     ObservableList<Student> students=FXCollections.observableArrayList();
     ObservableList<Professor> professors=FXCollections.observableArrayList();
     @FXML
     public void initialize() {
-        model.load();
         students=FXCollections.observableArrayList(model.getStudents());
         professors=FXCollections.observableArrayList(model.getProfessors());
 
@@ -129,6 +128,7 @@ public class AdminController {
                 motherField.textProperty().bindBidirectional(newValue.mothersNameProperty());
                 fatherField.textProperty().bindBidirectional(newValue.fathersNameProperty());
             }
+            userStudentList.refresh();
         });
 
 
@@ -136,11 +136,15 @@ public class AdminController {
 
     }
     public void addStudentAction(ActionEvent actionEvent) {
+        students.add(new Student());
+        studentsList.setItems(students);
+        studentsList.getSelectionModel().selectLast();
+        studentsList.refresh();
 
     }
 
     public void deleteStudentAction(ActionEvent actionEvent) {
-        students.removeAll(studentsList.getSelectionModel().getSelectedItem());
+        model.getStudents().removeAll(studentsList.getSelectionModel().getSelectedItem());
         studentsList.refresh();
     }
 
@@ -157,6 +161,11 @@ public class AdminController {
     }
 
     public void addProfessorAction(ActionEvent actionEvent) {
+        professors.add(new Professor());
+        professorList.getSelectionModel().selectLast();
+        professorList.setItems(professors);
+        model.getProfessors().add(professorList.getSelectionModel().getSelectedItem());
+        professorList.refresh();
     }
 
     public void deleteProfesorAction(ActionEvent actionEvent) {
@@ -192,8 +201,8 @@ public class AdminController {
             stage.setOnHiding(event -> {
                 Subject subject = add.getSubject();
                 if (subject != null) {
-                    subjects.add(subject);
-                    classesTable.setItems(subjects);
+                    model.getSubjects().add(subject);
+                    classesTable.setItems(model.getSubjects());
                     classesTable.refresh();
                     for (Professor profesor : professors
                             ) {
@@ -209,7 +218,12 @@ public class AdminController {
     }
 
     public void deleteClassAction(ActionEvent actionEvent) {
-        subjects.removeAll(classesTable.getSelectionModel().selectedItemProperty().get());
+
+        for (Professor prof : model.getProfessors()){
+            prof.getSubjects().remove(classesTable.getSelectionModel().selectedItemProperty().get());
+        }
+        model.getSubjects().removeAll(classesTable.getSelectionModel().selectedItemProperty().get());
+        classesTable.setItems(model.getSubjects());
         classesTable.refresh();
     }
 

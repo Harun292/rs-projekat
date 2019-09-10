@@ -9,14 +9,36 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Model {
+    private static Model instance=null;
+
     ObservableList<Person> users= FXCollections.observableArrayList();
     ObservableList<Professor> professors=FXCollections.observableArrayList();
     ObservableList<Student> students=FXCollections.observableArrayList();
     ObjectProperty<Person> person=new SimpleObjectProperty<>();
     ObservableList<Subject> subjects=FXCollections.observableArrayList();
 
+    private Model() {
+    }
+
+    public Student getById(int i)
+    {
+        for (Student student :students) {
+            if(student.getId()==i)
+                return student;
+        }
+        return null;
+    }
+
     public ObservableList<Professor> getProfessors() {
         return professors;
+    }
+
+    public static Model getInstance() {
+        if (instance == null) {
+            instance = new Model();
+            instance.load();
+        }
+        return instance;
     }
 
     public void setProfessors(ObservableList<Professor> professors) {

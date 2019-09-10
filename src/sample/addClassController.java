@@ -18,12 +18,11 @@ public class addClassController {
     public ChoiceBox<Professor> addClassChoice;
     public TextField addClassField;
     ObservableList<Professor> professors = FXCollections.observableArrayList();
-    Model model = new Model();
+    Model model=Model.getInstance();
 
     @FXML
     public void initialize()
     {
-        model.load();
         professors = model.getProfessors();
         addClassChoice.setItems(professors);
 

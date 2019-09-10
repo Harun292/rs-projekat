@@ -16,6 +16,11 @@ import java.io.IOException;
 public class LoginController {
     public TextField userField;
     public PasswordField passField;
+    private Model model;
+
+    public LoginController() {
+        model = Model.getInstance();
+    }
 
     @FXML
     public void initialize()
@@ -36,8 +41,6 @@ public class LoginController {
 
     @FXML
     void logAction (){
-        Model model=new Model();
-        model.load();
         Person user=new Person();
         user.setName(userField.getText());
         for (Person person:model.getUsers()) {
@@ -56,7 +59,18 @@ public class LoginController {
                 }
                 else {
                     try {
-                        Parent root = FXMLLoader.load(getClass().getResource("studentPanel.fxml"));
+                        Student student=new Student();
+                        for (Student stud:model.getStudents()) {
+                            if(stud.getName().equals(userField.getText()))
+                            {
+                                student=stud;
+                                break;
+                            }
+                        }
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("studentPanel.fxml"));
+                        StudentController studentController=new StudentController(student);
+                        loader.setController(studentController);
+                        Parent root=loader.load();
                         Stage stage = new Stage();
                         stage.setTitle("E-Index");
                         stage.setScene(new Scene(root));
