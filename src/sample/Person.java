@@ -12,6 +12,9 @@ public class Person {
     SimpleStringProperty placeOfBirth= new SimpleStringProperty("");
     SimpleStringProperty livingPlace= new SimpleStringProperty("");
     SimpleObjectProperty<LocalDate> dateOfBirth=new SimpleObjectProperty<>();
+    SimpleStringProperty username=new SimpleStringProperty();
+    SimpleStringProperty password=new SimpleStringProperty();
+
     int id;
 
     public int getId() {
@@ -25,7 +28,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth,int id) {
+    public Person(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth,int id,String username,String password) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.jmbg = new SimpleStringProperty(jmbg);
@@ -33,6 +36,8 @@ public class Person {
         this.livingPlace = new SimpleStringProperty(livingPlace);
         this.dateOfBirth =new SimpleObjectProperty<LocalDate>(dateOfBirth);
         this.id=id;
+        this.username=new SimpleStringProperty(username);
+        this.password=new SimpleStringProperty(password);
     }
 
     public String getName() {
@@ -105,6 +110,30 @@ public class Person {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth.set(dateOfBirth);
+    }
+
+    public String getUsername() {
+        return username.get();
+    }
+
+    public SimpleStringProperty usernameProperty() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username.set(username);
+    }
+
+    public String getPassword() {
+        return password.get();
+    }
+
+    public SimpleStringProperty passwordProperty() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password.set(password);
     }
 
     @Override

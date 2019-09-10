@@ -93,6 +93,8 @@ public class Model {
         student.setJmbg("43353453");
         student.setLivingPlace("Bugojno");
         student.setPlaceOfBirth("Travnik");
+        student.setPassword("123456");
+        student.setUsername("hajkunic1");
 
         Student student1=new Student();
         student1.setName("Harun");
@@ -104,6 +106,9 @@ public class Model {
         student1.setJmbg("43353453");
         student1.setLivingPlace("Bugojno");
         student1.setPlaceOfBirth("Travnik");
+        student1.setPassword("123456");
+        student1.setUsername("hajkunic1");
+
         users.add(student1);
         users.add(student);
         Professor professor=new Professor();
@@ -113,12 +118,16 @@ public class Model {
         professor.setDateOfBirth(LocalDate.now());
         professor.setJmbg("43353453");
         professor.setLivingPlace("Bugojno");professor.setPlaceOfBirth("Travnik");
+        professor.setPassword("123456");
+        professor.setUsername("admin");
         users.add(professor);
         Professor professor1 = new Professor();
         professor1.setId(111);
         professor1.setName("Mirza");
         professor1.setSurname("Gojak");
         professor1.setDateOfBirth(LocalDate.now());
+        professor.setPassword("123456");
+        professor.setUsername("admin");
         users.add(professor1);
         Subject tp=new Subject();
         tp.setId(1);
@@ -168,6 +177,14 @@ public class Model {
                 i--;
             }
         }
+    }
+    public Person findByUsername(String username)
+    {
+        for (Person per:users) {
+            if(per.getUsername().equals(username))
+                return per;
+        }
+        return null;
     }
 
 }

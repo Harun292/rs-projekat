@@ -11,10 +11,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -45,26 +48,36 @@ public class AdminController {
     public TextField livingPlaceField;
     public TextField fatherField;
     public TextField motherField;
+    public TextField userNameField;
+    public TextField passwordField;
+    public TextField passwordFieldStud;
+    public TextField userNameFieldStud;
     public Tab studentsTab;
     public Tab professorsTab;
     public TabPane adminTabPane;
+    public Image image;
     Model model=Model.getInstance();
     ObservableList<Subject> subjects=FXCollections.observableArrayList();
     ObservableList<Student> students=FXCollections.observableArrayList();
     ObservableList<Professor> professors=FXCollections.observableArrayList();
     @FXML
     public void initialize() {
+        try {
+            image=new Image(new FileInputStream("C:\\Users\\ESAD-PC\\IdeaProjects\\E-Index\\src\\sample\\prijava.jpg"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         students=FXCollections.observableArrayList(model.getStudents());
         professors=FXCollections.observableArrayList(model.getProfessors());
 
-        userStudentList.setItems(students);
-        userProfessorList.setItems(professors);
+        userStudentList.setItems(model.getStudents());
+        userProfessorList.setItems(model.getProfessors());
         subjects=FXCollections.observableArrayList(model.getSubjects());
-        classesTable.setItems(subjects);
+        classesTable.setItems(model.getSubjects());
         classColumn.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getSubjectName()));
         professorColumn.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getProfessor().toString()));
 
-        professorList.setItems(professors);
+        professorList.setItems(model.getProfessors());
         professorList.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (oldValue != null) {
                 professorNameField.textProperty().unbindBidirectional(oldValue.nameProperty());
@@ -73,6 +86,8 @@ public class AdminController {
                 professorBirthPlaceField.textProperty().unbindBidirectional(oldValue.placeOfBirthProperty());
                 professorJmbgField.textProperty().unbindBidirectional(oldValue.jmbgProperty());
                 professorLivingPlaceField.textProperty().unbindBidirectional(oldValue.livingPlaceProperty());
+                userNameField.textProperty().unbindBidirectional(oldValue.usernameProperty());
+                passwordField.textProperty().unbindBidirectional(oldValue.passwordProperty());
             }
                 if (newValue == null) {
                 professorNameField.setText("");
@@ -81,6 +96,8 @@ public class AdminController {
                 professorBirthPlaceField.setText("");
                 professorJmbgField.setText("0");
                 professorLivingPlaceField.setText("");
+                userNameField.setText("");
+                passwordField.setText("");
             } else {
                     professorNameField.textProperty().bindBidirectional(newValue.nameProperty());
                     professorSurnameField.textProperty().bindBidirectional(newValue.surnameProperty());
@@ -88,12 +105,14 @@ public class AdminController {
                     professorBirthPlaceField.textProperty().bindBidirectional(newValue.placeOfBirthProperty());
                     professorJmbgField.textProperty().bindBidirectional(newValue.jmbgProperty());
                     professorLivingPlaceField.textProperty().bindBidirectional(newValue.livingPlaceProperty());
+                    userNameField.textProperty().bindBidirectional(newValue.usernameProperty());
+                    passwordField.textProperty().bindBidirectional(newValue.passwordProperty());
             }
                 classesTable.refresh();
                 userProfessorList.refresh();
                 professorList.refresh();
         });
-        studentsList.setItems(students);
+        studentsList.setItems(model.getStudents());
         studentsList.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (oldValue != null) {
                 nameField.textProperty().unbindBidirectional(oldValue.nameProperty());
@@ -105,6 +124,8 @@ public class AdminController {
                 livingPlaceField.textProperty().unbindBidirectional(oldValue.livingPlaceProperty());
                 motherField.textProperty().unbindBidirectional(oldValue.mothersNameProperty());
                 fatherField.textProperty().unbindBidirectional(oldValue.fathersNameProperty());
+                userNameFieldStud.textProperty().unbindBidirectional(oldValue.usernameProperty());
+                passwordFieldStud.textProperty().unbindBidirectional(oldValue.passwordProperty());
             }
             if (newValue == null) {
                 nameField.setText("");
@@ -116,6 +137,8 @@ public class AdminController {
                 livingPlaceField.setText("");
                 fatherField.setText("");
                 motherField.setText("");
+                userNameFieldStud.setText("");
+                passwordFieldStud.setText("");
 
             } else {
                 nameField.textProperty().bindBidirectional(newValue.nameProperty());
@@ -127,6 +150,9 @@ public class AdminController {
                 livingPlaceField.textProperty().bindBidirectional(newValue.livingPlaceProperty());
                 motherField.textProperty().bindBidirectional(newValue.mothersNameProperty());
                 fatherField.textProperty().bindBidirectional(newValue.fathersNameProperty());
+                userNameFieldStud.textProperty().bindBidirectional(newValue.usernameProperty());
+                passwordFieldStud.textProperty().bindBidirectional(newValue.passwordProperty());
+                imageView.setImage(image);
             }
             userStudentList.refresh();
         });
@@ -136,8 +162,9 @@ public class AdminController {
 
     }
     public void addStudentAction(ActionEvent actionEvent) {
-        students.add(new Student());
-        studentsList.setItems(students);
+        //students.add(new Student());
+        model.getStudents().add(new Student());
+        studentsList.setItems(model.getStudents());
         studentsList.getSelectionModel().selectLast();
         studentsList.refresh();
 
@@ -145,6 +172,9 @@ public class AdminController {
 
     public void deleteStudentAction(ActionEvent actionEvent) {
         model.getStudents().removeAll(studentsList.getSelectionModel().getSelectedItem());
+        //students.removeAll(studentsList.getSelectionModel().getSelectedItem());
+        studentsList.setItems(model.getStudents());
+        //userStudentList.setItems(model.getStudents());
         studentsList.refresh();
     }
 
@@ -161,20 +191,20 @@ public class AdminController {
     }
 
     public void addProfessorAction(ActionEvent actionEvent) {
-        professors.add(new Professor());
+        //professors.add(new Professor());
+        model.getProfessors().add(new Professor());
         professorList.getSelectionModel().selectLast();
-        professorList.setItems(professors);
-        model.getProfessors().add(professorList.getSelectionModel().getSelectedItem());
+        professorList.setItems(model.getProfessors());
+        //model.getProfessors().add(professorList.getSelectionModel().getSelectedItem());
         professorList.refresh();
     }
 
     public void deleteProfesorAction(ActionEvent actionEvent) {
         model.removeByProfessor(professorList.getSelectionModel().getSelectedItem());
-        professors.removeAll(professorList.getSelectionModel().getSelectedItem());
         subjects=FXCollections.observableArrayList(model.getSubjects());
-        professorList.refresh();
         classesTable.setItems(subjects);
         classesTable.refresh();
+        model.getProfessors().removeAll(professorList.getSelectionModel().getSelectedItem());
     }
 
     public void classesAction(ActionEvent actionEvent) throws IOException {
@@ -251,7 +281,7 @@ public class AdminController {
 
     public void deleteUserAction(ActionEvent actionEvent) {
         if (userStudentList.getSelectionModel().getSelectedItem()!=null) {
-            students.removeAll(userStudentList.getSelectionModel().getSelectedItem());
+            model.getStudents().removeAll(userStudentList.getSelectionModel().getSelectedItem());
             userStudentList.refresh();
         }
 
@@ -260,7 +290,7 @@ public class AdminController {
             subjects=FXCollections.observableArrayList(model.getSubjects());
             classesTable.setItems(subjects);
             classesTable.refresh();
-            professors.removeAll(userProfessorList.getSelectionModel().getSelectedItem());
+            model.getProfessors().removeAll(userProfessorList.getSelectionModel().getSelectedItem());
 
         }
             userProfessorList.refresh();

@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,32 +42,23 @@ public class LoginController {
 
     @FXML
     void logAction (){
-        Person user=new Person();
-        user.setName(userField.getText());
-        for (Person person:model.getUsers()) {
-            if(user.getName().equals(person.getName()))
+        Person person=model.findByUsername(userField.getText().trim());
+            if(person!=null&&person instanceof Professor&&person.getPassword().equals(passField.getText().trim()))
             {
-                if(person instanceof Professor) {
                     try {
                         Parent root = FXMLLoader.load(getClass().getResource("adminPanel.fxml"));
                         Stage stage = new Stage();
                         stage.setTitle("E-Index");
                         stage.setScene(new Scene(root));
+                        userField.getScene().getWindow().hide();
                         stage.show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-                else {
+                else if(person!=null&&person.getPassword().equals(passField.getText().trim())){
                     try {
                         Student student=new Student();
-                        for (Student stud:model.getStudents()) {
-                            if(stud.getName().equals(userField.getText()))
-                            {
-                                student=stud;
-                                break;
-                            }
-                        }
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("studentPanel.fxml"));
                         StudentController studentController=new StudentController(student);
                         loader.setController(studentController);
@@ -74,15 +66,17 @@ public class LoginController {
                         Stage stage = new Stage();
                         stage.setTitle("E-Index");
                         stage.setScene(new Scene(root));
+                        userField.getScene().getWindow().hide();
                         stage.show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
+                else
+                    {
+                        //VALIDACIJA
+                    }
 
-
-            }
-        }
 
 
     }

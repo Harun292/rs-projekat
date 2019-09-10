@@ -37,10 +37,12 @@ public class StudentController {
 
     @FXML
     public void initialize() {
-        students = FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
-        studentTableView.setItems(students);
-        pointsColumn.setCellValueFactory(new PropertyValueFactory("numberOfPoints"));
-        gradeColumn.setCellValueFactory(new PropertyValueFactory("grade"));
-        classColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSubject().getSubjectName()));
+        if(model.getById(student.getId())!=null) {
+            students = FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
+            studentTableView.setItems(students);
+            pointsColumn.setCellValueFactory(new PropertyValueFactory("numberOfPoints"));
+            gradeColumn.setCellValueFactory(new PropertyValueFactory("grade"));
+            classColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSubject().getSubjectName()));
+        }
     }
 }

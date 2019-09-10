@@ -23,8 +23,8 @@ public class Student extends Person {
     public Student() {
     }
 
-    public Student(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth, String mothersName, String fathersName, int index,int id) {
-        super(name, surname, jmbg, placeOfBirth, livingPlace, dateOfBirth,id);
+    public Student(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth, String mothersName, String fathersName, int index,int id,String username,String password) {
+        super(name, surname, jmbg, placeOfBirth, livingPlace, dateOfBirth,id,username,password);
         this.mothersName =new SimpleStringProperty(mothersName);
         this.fathersName = new SimpleStringProperty(fathersName);
         this.index = new SimpleIntegerProperty(index);
