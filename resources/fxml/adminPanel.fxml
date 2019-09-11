@@ -18,8 +18,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import java.net.URL?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AdminController">
-   <center>
+    <center>
       <TabPane fx:id="adminTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab fx:id="studentsTab" text="Students">
@@ -27,7 +28,12 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <BorderPane prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <center>
+                            <stylesheets>
+                                <URL value="@../css/validation.css" />
+                                <URL value="@../css/button.css" />
+                            </stylesheets>
+
+                            <center>
                               <GridPane BorderPane.alignment="CENTER">
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -158,10 +164,10 @@
                            </center>
                            <bottom>
                               <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                <buttons>
-                                  <Button mnemonicParsing="false" onAction="#addStudentAction" text="Add" />
-                                    <Button mnemonicParsing="false" onAction="#deleteStudentAction" text="Delete" />
-                                    <Button mnemonicParsing="false" onAction="#detailsAction" text="Details" />
+                                  <buttons>
+                                  <Button mnemonicParsing="false" onAction="#addStudentAction" styleClass="add" text="Add" />
+                                    <Button mnemonicParsing="false" onAction="#deleteStudentAction" styleClass="delete" text="Delete" />
+                                    <Button mnemonicParsing="false" onAction="#detailsAction" styleClass="details" text="Details" />
                                 </buttons>
                                  <BorderPane.margin>
                                     <Insets right="10.0" />
@@ -178,6 +184,10 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <BorderPane prefHeight="371.0" prefWidth="600.0">
+                            <stylesheets>
+                                <URL value="@../css/validation.css" />
+                                <URL value="@../css/button.css" />
+                            </stylesheets>
                            <center>
                               <GridPane BorderPane.alignment="CENTER">
                                  <columnConstraints>
@@ -198,41 +208,41 @@
                                  <children>
                                     <ListView fx:id="professorList" prefHeight="200.0" prefWidth="200.0" GridPane.rowSpan="2147483647">
                                        <GridPane.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </GridPane.margin>
                                     </ListView>
-                                    <Label text="JMBG:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <Label text="Date of birth:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <Label text="Place of birth:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <Label text="Living place:" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    <Label text="Surname:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <TextField fx:id="professorJmbgField" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets right="10.0" />
+                                     <Label text="JMBG:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                     <Label text="Date of birth:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                     <Label text="Place of birth:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                     <Label text="Living place:" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                     <Label text="Surname:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                     <TextField fx:id="professorNameField" GridPane.columnIndex="2" />
+                                     <TextField fx:id="professorSurnameField" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                         <GridPane.margin>
+                                             <Insets right="10.0" />
+                                         </GridPane.margin>
+                                     </TextField>
+                                     <TextField fx:id="professorJmbgField" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                         <GridPane.margin>
+                                           <Insets right="10.0" />
                                        </GridPane.margin>
                                     </TextField>
-                                    <TextField fx:id="professorBirthPlaceField" GridPane.columnIndex="2" GridPane.rowIndex="4">
-                                       <GridPane.margin>
-                                          <Insets right="10.0" />
+                                     <DatePicker fx:id="professorDatePicker" prefWidth="230.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                         <GridPane.margin>
+                                             <Insets right="10.0" />
+                                         </GridPane.margin>
+                                     </DatePicker>
+                                     <TextField fx:id="professorBirthPlaceField" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                        <GridPane.margin>
+                                           <Insets right="10.0" />
                                        </GridPane.margin>
                                     </TextField>
-                                    <TextField fx:id="professorLivingPlaceField" GridPane.columnIndex="2" GridPane.rowIndex="5">
-                                       <GridPane.margin>
-                                          <Insets right="10.0" />
+                                     <TextField fx:id="professorLivingPlaceField" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                        <GridPane.margin>
+                                           <Insets right="10.0" />
                                        </GridPane.margin>
                                     </TextField>
-                                    <TextField fx:id="professorSurnameField" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets right="10.0" />
-                                       </GridPane.margin>
-                                    </TextField>
-                                    <DatePicker fx:id="professorDatePicker" prefWidth="230.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                                       <GridPane.margin>
-                                          <Insets right="10.0" />
-                                       </GridPane.margin>
-                                    </DatePicker>
-                                    <Label text="Name:" GridPane.columnIndex="1" />
-                                    <TextField fx:id="professorNameField" GridPane.columnIndex="2" />
+                                     <Label text="Name:" GridPane.columnIndex="1" />
                                     <Label text="Username:" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                     <Label text="Password:" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                     <TextField fx:id="userNameField" GridPane.columnIndex="2" GridPane.rowIndex="6" />
@@ -243,9 +253,9 @@
                            <bottom>
                               <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                  <buttons>
-                                    <Button mnemonicParsing="false" onAction="#addProfessorAction" text="Add" />
-                                    <Button mnemonicParsing="false" onAction="#deleteProfesorAction" text="Delete" />
-                                    <Button mnemonicParsing="false" onAction="#classesAction" text="Classes" />
+                                    <Button mnemonicParsing="false" onAction="#addProfessorAction" styleClass="add" text="Add" />
+                                    <Button mnemonicParsing="false" onAction="#deleteProfesorAction" styleClass="delete" text="Delete" />
+                                    <Button mnemonicParsing="false" onAction="#classesAction" styleClass="details" text="Classes" />
                                  </buttons>
                                  <BorderPane.margin>
                                     <Insets right="10.0" />
@@ -261,7 +271,11 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <BorderPane prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <center>
+                            <stylesheets>
+                                <URL value="@../css/validation.css" />
+                                <URL value="@../css/button.css" />
+                            </stylesheets>
+                            <center>
                               <TableView fx:id="classesTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <columns>
                                   <TableColumn fx:id="classColumn" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="-1.0" resizable="false" text="Class" />
@@ -272,8 +286,8 @@
                            <bottom>
                               <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <buttons>
-                                  <Button mnemonicParsing="false" onAction="#addClassAction" text="Add" />
-                                    <Button mnemonicParsing="false" onAction="#deleteClassAction" text="Delete" />
+                                  <Button mnemonicParsing="false" onAction="#addClassAction" styleClass="add" text="Add" />
+                                    <Button mnemonicParsing="false" onAction="#deleteClassAction" styleClass="delete" text="Delete" />
                                 </buttons>
                                  <BorderPane.margin>
                                     <Insets right="10.0" />
@@ -289,7 +303,10 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <BorderPane prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <center>
+                            <stylesheets>
+                                <URL value="@../css/validation.css" />
+                                <URL value="@../css/button.css" />
+                            </stylesheets><center>
                               <GridPane BorderPane.alignment="CENTER">
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -319,8 +336,8 @@
                            <bottom>
                               <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <buttons>
-                                    <Button layoutX="450.0" layoutY="18.0" mnemonicParsing="false" onAction="#addUserAction" text="Add user" />
-                                    <Button layoutX="450.0" layoutY="18.0" mnemonicParsing="false" onAction="#deleteUserAction" text="Delete user" />
+                                    <Button layoutX="450.0" layoutY="18.0" mnemonicParsing="false" onAction="#addUserAction" styleClass="add" text="Add user" />
+                                    <Button layoutX="450.0" layoutY="18.0" mnemonicParsing="false" onAction="#deleteUserAction" styleClass="delete" text="Delete user" />
                                 </buttons>
                                  <BorderPane.margin>
                                     <Insets right="10.0" />

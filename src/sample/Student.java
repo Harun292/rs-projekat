@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Student extends Person {
-    SimpleStringProperty mothersName=new SimpleStringProperty();
-    SimpleStringProperty fathersName=new SimpleStringProperty();
+    SimpleStringProperty mothersName=new SimpleStringProperty("");
+    SimpleStringProperty fathersName=new SimpleStringProperty("");
     SimpleIntegerProperty index=new SimpleIntegerProperty();
     ArrayList<Grades> grades=new ArrayList<>();
 
@@ -21,6 +21,7 @@ public class Student extends Person {
     }
 
     public Student() {
+        super();
     }
 
     public Student(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth, String mothersName, String fathersName, int index,int id,String username,String password) {

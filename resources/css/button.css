@@ -1,0 +1,15 @@
+.add
+{
+-fx-graphic-text-gap: 15px;
+-fx-graphic: url("add.png");
+}
+.delete
+{
+-fx-graphic-text-gap: 15px;
+-fx-graphic: url("delete.png");
+}
+.details
+{
+-fx-graphic-text-gap: 15px;
+-fx-graphic: url("details.png");
+}

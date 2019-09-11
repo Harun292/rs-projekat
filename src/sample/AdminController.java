@@ -1,8 +1,9 @@
 package sample;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,7 +11,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -63,7 +63,7 @@ public class AdminController {
     @FXML
     public void initialize() {
         try {
-            image=new Image(new FileInputStream("C:\\Users\\ESAD-PC\\IdeaProjects\\E-Index\\src\\sample\\prijava.jpg"));
+            image=new Image(new FileInputStream("C:\\Users\\ESAD-PC\\IdeaProjects\\E-Index\\resources\\images\\prijava.jpg"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -156,7 +156,131 @@ public class AdminController {
             }
             userStudentList.refresh();
         });
+        nameField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                nameField.getStyleClass().removeAll("invalid");
+            } else {
+                nameField.getStyleClass().add("invalid");
+            }
+        });
+        surnameField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                surnameField.getStyleClass().removeAll("invalid");
+            } else {
+                surnameField.getStyleClass().add("invalid");
+            }
+        });
+        indexField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                indexField.getStyleClass().removeAll("invalid");
+            } else {
+                indexField.getStyleClass().add("invalid");
+            }
+        });
 
+        userNameFieldStud.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                userNameFieldStud.getStyleClass().removeAll("invalid");
+            } else {
+                userNameFieldStud.getStyleClass().add("invalid");
+            }
+        });
+
+
+        passwordFieldStud.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                passwordFieldStud.getStyleClass().removeAll("invalid");
+            } else {
+                passwordFieldStud.getStyleClass().add("invalid");
+            }
+        });
+
+        jmbgField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                jmbgField.getStyleClass().removeAll("invalid");
+            } else {
+                jmbgField.getStyleClass().add("invalid");
+            }
+        });
+        livingPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                livingPlaceField.getStyleClass().removeAll("invalid");
+            } else {
+                livingPlaceField.getStyleClass().add("invalid");
+            }
+        });
+        birthPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                birthPlaceField.getStyleClass().removeAll("invalid");
+            } else {
+                birthPlaceField.getStyleClass().add("invalid");
+            }
+        });
+
+        motherField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                motherField.getStyleClass().removeAll("invalid");
+            } else {
+                motherField.getStyleClass().addAll("invalid");
+            }
+        });
+
+        fatherField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                fatherField.getStyleClass().removeAll("invalid");
+            } else {
+                fatherField.getStyleClass().addAll("invalid");
+            }
+        });
+        professorNameField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                professorNameField.getStyleClass().removeAll("invalid");
+            } else {
+                professorNameField.getStyleClass().add("invalid");
+            }
+        });
+        professorSurnameField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                professorSurnameField.getStyleClass().removeAll("invalid");
+            } else {
+                professorSurnameField.getStyleClass().add("invalid");
+            }
+        });
+        professorBirthPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                professorBirthPlaceField.getStyleClass().removeAll("invalid");
+            } else {
+                professorBirthPlaceField.getStyleClass().add("invalid");
+            }
+        });
+        professorLivingPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                professorLivingPlaceField.getStyleClass().removeAll("invalid");
+            } else {
+                professorLivingPlaceField.getStyleClass().add("invalid");
+            }
+        });
+        professorJmbgField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                professorJmbgField.getStyleClass().removeAll("invalid");
+            } else {
+                professorJmbgField.getStyleClass().add("invalid");
+            }
+        });
+        userNameField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                userNameField.getStyleClass().removeAll("invalid");
+            } else {
+                userNameField.getStyleClass().add("invalid");
+            }
+        });
+        passwordField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()) {
+                passwordField.getStyleClass().removeAll("invalid");
+            } else {
+                passwordField.getStyleClass().add("invalid");
+            }
+        });
 
 
 
@@ -171,22 +295,33 @@ public class AdminController {
     }
 
     public void deleteStudentAction(ActionEvent actionEvent) {
-        model.getStudents().removeAll(studentsList.getSelectionModel().getSelectedItem());
-        //students.removeAll(studentsList.getSelectionModel().getSelectedItem());
-        studentsList.setItems(model.getStudents());
-        //userStudentList.setItems(model.getStudents());
-        studentsList.refresh();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Do you want to delete student: "+studentsList.getSelectionModel().getSelectedItem());
+        ButtonType buttonType = new ButtonType("Yes");
+        ButtonType buttonType1=new ButtonType("No");
+        alert.getButtonTypes().setAll(buttonType,buttonType1);
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get()==buttonType) {
+            model.getStudents().removeAll(studentsList.getSelectionModel().getSelectedItem());
+            //students.removeAll(studentsList.getSelectionModel().getSelectedItem());
+            studentsList.setItems(model.getStudents());
+            //userStudentList.setItems(model.getStudents());
+            studentsList.refresh();
+        }
+        else
+            alert.close();
     }
 
     public void detailsAction(ActionEvent actionEvent) throws IOException {
         if(studentsList.getSelectionModel().getSelectedItem() == null) return;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("detailsPanel.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/detailsPanel.fxml"));
         DetailsController detailsController =new DetailsController(studentsList.getSelectionModel().getSelectedItem());
         loader.setController(detailsController);
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("Details");
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.show();
     }
 
@@ -200,33 +335,45 @@ public class AdminController {
     }
 
     public void deleteProfesorAction(ActionEvent actionEvent) {
-        model.removeByProfessor(professorList.getSelectionModel().getSelectedItem());
-        subjects=FXCollections.observableArrayList(model.getSubjects());
-        classesTable.setItems(subjects);
-        classesTable.refresh();
-        model.getProfessors().removeAll(professorList.getSelectionModel().getSelectedItem());
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Do you want to delete professor: "+professorList.getSelectionModel().getSelectedItem());
+        ButtonType buttonType = new ButtonType("Yes");
+        ButtonType buttonType1=new ButtonType("No");
+        alert.getButtonTypes().setAll(buttonType,buttonType1);
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get()==buttonType) {
+            model.removeByProfessor(professorList.getSelectionModel().getSelectedItem());
+            subjects = FXCollections.observableArrayList(model.getSubjects());
+            classesTable.setItems(subjects);
+            classesTable.refresh();
+            model.getProfessors().removeAll(professorList.getSelectionModel().getSelectedItem());
+        }
+        else
+            alert.close();
     }
 
     public void classesAction(ActionEvent actionEvent) throws IOException {
         if(professorList.getSelectionModel().getSelectedItem() == null) return;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("classesPanel.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/classesPanel.fxml"));
         classesListController classesListController =new classesListController(professorList.getSelectionModel().getSelectedItem());
         loader.setController(classesListController);
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("Details");
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.show();
     }
 
     public void addClassAction(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("addClassPanel.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addClassPanel.fxml"));
         addClassController add=new addClassController();
         loader.setController(add);
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("Details");
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.show();
             stage.setOnHiding(event -> {
                 Subject subject = add.getSubject();
@@ -249,12 +396,22 @@ public class AdminController {
 
     public void deleteClassAction(ActionEvent actionEvent) {
 
-        for (Professor prof : model.getProfessors()){
-            prof.getSubjects().remove(classesTable.getSelectionModel().selectedItemProperty().get());
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Do you want to delete class: "+classesTable.getSelectionModel().getSelectedItem());
+        ButtonType buttonType = new ButtonType("Yes");
+        ButtonType buttonType1=new ButtonType("No");
+        alert.getButtonTypes().setAll(buttonType,buttonType1);
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get()==buttonType) {
+            for (Professor prof : model.getProfessors()) {
+                prof.getSubjects().remove(classesTable.getSelectionModel().selectedItemProperty().get());
+            }
+            model.getSubjects().removeAll(classesTable.getSelectionModel().selectedItemProperty().get());
+            classesTable.setItems(model.getSubjects());
+            classesTable.refresh();
         }
-        model.getSubjects().removeAll(classesTable.getSelectionModel().selectedItemProperty().get());
-        classesTable.setItems(model.getSubjects());
-        classesTable.refresh();
+        else
+            alert.close();
     }
 
     public void addUserAction(ActionEvent actionEvent) throws IOException {
@@ -280,18 +437,38 @@ public class AdminController {
     }
 
     public void deleteUserAction(ActionEvent actionEvent) {
-        if (userStudentList.getSelectionModel().getSelectedItem()!=null) {
-            model.getStudents().removeAll(userStudentList.getSelectionModel().getSelectedItem());
-            userStudentList.refresh();
+
+        if (userStudentList.getSelectionModel().getSelectedItem()!=null&&userProfessorList.getSelectionModel().getSelectedItem()==null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Do you want to delete user: "+userStudentList.getSelectionModel().getSelectedItem());
+            ButtonType buttonType = new ButtonType("Yes");
+            ButtonType buttonType1=new ButtonType("No");
+            alert.getButtonTypes().setAll(buttonType,buttonType1);
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get()==buttonType) {
+                model.getStudents().removeAll(userStudentList.getSelectionModel().getSelectedItem());
+                userStudentList.refresh();
+            }
+            else
+                alert.close();
         }
 
-        else {
-            model.removeByProfessor(userProfessorList.getSelectionModel().getSelectedItem());
-            subjects=FXCollections.observableArrayList(model.getSubjects());
-            classesTable.setItems(subjects);
-            classesTable.refresh();
-            model.getProfessors().removeAll(userProfessorList.getSelectionModel().getSelectedItem());
-
+       else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Do you want to delete user: "+userProfessorList.getSelectionModel().getSelectedItem());
+            ButtonType buttonType = new ButtonType("Yes");
+            ButtonType buttonType1=new ButtonType("No");
+            alert.getButtonTypes().setAll(buttonType,buttonType1);
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get()==buttonType) {
+                model.removeByProfessor(userProfessorList.getSelectionModel().getSelectedItem());
+                subjects = FXCollections.observableArrayList(model.getSubjects());
+                classesTable.setItems(subjects);
+                classesTable.refresh();
+                model.getProfessors().removeAll(userProfessorList.getSelectionModel().getSelectedItem());
+            }
+            else
+                alert.close();
         }
             userProfessorList.refresh();
 

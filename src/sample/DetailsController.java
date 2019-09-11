@@ -40,12 +40,13 @@ public class DetailsController {
         classColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSubject().getSubjectName()));
     }
     public void addDetails(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("addDetailsPanel.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addDetailsPanel.fxml"));
         addDetailsController detailsController =new addDetailsController();
         loader.setController(detailsController);
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("Details");
+        stage.setResizable(false);
         stage.setScene(new Scene(root));
         stage.show();
         stage.setOnHiding(event -> {

@@ -181,6 +181,7 @@ public class Model {
     public Person findByUsername(String username)
     {
         for (Person per:users) {
+            System.out.println(username);
             if(per.getUsername().equals(username))
                 return per;
         }
