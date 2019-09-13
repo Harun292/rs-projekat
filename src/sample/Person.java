@@ -11,7 +11,7 @@ public class Person {
     SimpleStringProperty jmbg= new SimpleStringProperty("");
     SimpleStringProperty placeOfBirth= new SimpleStringProperty("");
     SimpleStringProperty livingPlace= new SimpleStringProperty("");
-    SimpleObjectProperty<LocalDate> dateOfBirth=new SimpleObjectProperty<>();
+    SimpleObjectProperty<LocalDate> dateOfBirth=new SimpleObjectProperty<>(LocalDate.now());
     SimpleStringProperty username=new SimpleStringProperty("");
     SimpleStringProperty password=new SimpleStringProperty("");
     int id;

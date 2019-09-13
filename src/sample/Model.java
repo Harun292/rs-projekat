@@ -21,8 +21,9 @@ public class Model {
     ObjectProperty<Person> person=new SimpleObjectProperty<>();
     ObservableList<Subject> subjects=FXCollections.observableArrayList();
     Connection connection;
-    private PreparedStatement getUsersStmnt,getStudentsStmnt,getSubjectsStmnt,getGradesStmnt,getProfessorStmnt,getSubjectStmnt;
-
+    private PreparedStatement getUsersStmnt,getStudentsStmnt,getSubjectsStmnt,getGradesStmnt,getProfessorStmnt,getSubjectStmnt,getIdUsersStmnt,getIdStudentsStmnt,getIdSubjectsStmnt,getIdGradesStmnt;
+    private PreparedStatement addPersonStmnt,addStudentStmnt;
+    private PreparedStatement updatePersonStmnt,updateStudentStmnt;
     private Model() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:base.db");
@@ -41,6 +42,14 @@ public class Model {
             getGradesStmnt=connection.prepareStatement("SELECT * FROM GRADES");
             getProfessorStmnt=connection.prepareStatement("SELECT * FROM USERS WHERE id=?");
             getSubjectStmnt=connection.prepareStatement("SELECT * FROM SUBJECTS WHERE ID=?");
+            getIdUsersStmnt=connection.prepareStatement("SELECT MAX(id)+1 FROM USERS");
+            getIdStudentsStmnt=connection.prepareStatement("SELECT MAX(ID)+1 FROM STUDENTS");
+            getIdGradesStmnt=connection.prepareStatement("SELECT MAX(ID)+1 FROM GRADES");
+            getIdSubjectsStmnt=connection.prepareStatement("SELECT MAX(ID)+1 FROM SUBJECTS");
+            addPersonStmnt=connection.prepareStatement("INSERT INTO USERS VALUES(?,?,?,?,?,?,?,?,?,?)");
+            addStudentStmnt=connection.prepareStatement("INSERT INTO STUDENTS VALUES(?,?,?,?,?,?)");
+            updateStudentStmnt=connection.prepareStatement("UPDATE STUDENTS SET INDEKS=?,MOTHERS_NAME=?,FATHERS_NAME=? WHERE ID=?");
+            updatePersonStmnt=connection.prepareStatement("UPDATE USERS SET NAME=?,SURNAME=?,DATE_OF_BIRTH=?,PLACE_OF_BIRTH=?,LIVING_PLACE=?,JMBG=?,USERNAME=?,PASSWORD=? WHERE id=?");
            } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -84,13 +93,14 @@ public class Model {
     public void getPersons() throws SQLException {
         ResultSet rs=getUsersStmnt.executeQuery();
         ArrayList<Person> userResult=new ArrayList<>();
-        while(rs.next())
+        ResultSet rs1=getStudentsStmnt.executeQuery();
+        while(rs.next()&&rs1.next())
         {
             if(rs.getInt(10)==1)
             {
-                    ResultSet rs1=getStudentsStmnt.executeQuery();
                     Student stud = getStudentFromResultSet(rs,rs1);
                     students.add(stud);
+                System.out.println(stud.getMothersName());
                     users.add(stud);
 
             }
@@ -131,7 +141,58 @@ public class Model {
         }
         return grades;
     }
+    public void addUserBase(Person person) throws SQLException
+    {
+        //java.sql.Date date=new java.sql.Date(Long.parseLong(person.getDateOfBirth().toString()));
+        ResultSet rs=getIdUsersStmnt.executeQuery();
+        int id=rs.getInt(1);
+        addPersonStmnt.setInt(1,id);
+        addPersonStmnt.setString(2,person.getName());
+        addPersonStmnt.setString(3,person.getSurname());
+        addPersonStmnt.setDate(4,java.sql.Date.valueOf(person.getDateOfBirth()));
+        addPersonStmnt.setString(5,person.getPlaceOfBirth());
+        addPersonStmnt.setString(6,person.getLivingPlace());
+        addPersonStmnt.setString(7,person.getJmbg());
+        addPersonStmnt.setString(8,person.getUsername());
+        addPersonStmnt.setString(9,person.getPassword());
+        if(person instanceof Professor)
+        addPersonStmnt.setInt(10,1);
+        else addPersonStmnt.setInt(10,0);
+        addPersonStmnt.executeUpdate();
+        if(person instanceof Student)
+        {
+            ResultSet rs1=getIdStudentsStmnt.executeQuery();
+            int id1=rs1.getInt(1);
+            addStudentStmnt.setInt(1,id1);;
+            addStudentStmnt.setInt(2,id);
+            addStudentStmnt.setInt(3,((Student) person).getIndex());
+            addStudentStmnt.setString(4,"");
+            addStudentStmnt.setString(5,((Student) person).getMothersName());
+            addStudentStmnt.setString(6,((Student) person).getFathersName());
+            addStudentStmnt.executeUpdate();
+        }
+    }
 
+    public void updateUserBase(Person person) throws SQLException {
+        if(person instanceof Student)
+        {
+          updateStudentStmnt.setInt(1,((Student) person).getIndex());
+          updateStudentStmnt.setString(2,((Student) person).getMothersName());
+          updateStudentStmnt.setString(3,((Student) person).getFathersName());
+          updateStudentStmnt.setInt(4,person.getId());
+          updateStudentStmnt.executeUpdate();
+        }
+        updatePersonStmnt.setString(1,person.getName());
+        updatePersonStmnt.setString(2,person.getSurname());
+        updatePersonStmnt.setDate(3,java.sql.Date.valueOf(person.getDateOfBirth()));
+        updatePersonStmnt.setString(4,person.getPlaceOfBirth());
+        updatePersonStmnt.setString(5,person.getLivingPlace());
+        updatePersonStmnt.setString(6,person.getJmbg());
+        updatePersonStmnt.setString(7,person.getUsername());
+        updatePersonStmnt.setString(8,person.getPassword());;
+        updatePersonStmnt.setInt(9,person.getId());
+        updatePersonStmnt.executeUpdate();
+    }
 
     public Student getById(int i)
     {
