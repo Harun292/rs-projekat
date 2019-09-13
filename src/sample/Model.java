@@ -5,8 +5,12 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Model {
     private static Model instance=null;
@@ -16,13 +20,123 @@ public class Model {
     ObservableList<Student> students=FXCollections.observableArrayList();
     ObjectProperty<Person> person=new SimpleObjectProperty<>();
     ObservableList<Subject> subjects=FXCollections.observableArrayList();
+    Connection connection;
+    private PreparedStatement getUsersStmnt,getStudentsStmnt,getSubjectsStmnt,getGradesStmnt,getProfessorStmnt,getSubjectStmnt;
 
     private Model() {
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:base.db");
+            try {
+                getUsersStmnt = connection.prepareStatement("SELECT * FROM USERS");
+            } catch (SQLException e) {
+                regenerateDatabase();
+                try {
+                    getUsersStmnt = connection.prepareStatement("SELECT * FROM USERS");
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            getStudentsStmnt=connection.prepareStatement("SELECT*FROM STUDENTS ");
+            getSubjectsStmnt=connection.prepareStatement("SELECT * FROM SUBJECTS");
+            getGradesStmnt=connection.prepareStatement("SELECT * FROM GRADES");
+            getProfessorStmnt=connection.prepareStatement("SELECT * FROM USERS WHERE id=?");
+            getSubjectStmnt=connection.prepareStatement("SELECT * FROM SUBJECTS WHERE ID=?");
+           } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
+    public void regenerateDatabase() {
+        Scanner input;
+        try {
+            input = new Scanner(new FileInputStream("base.sql"));
+            StringBuilder sqlStatement = new StringBuilder();
+            while (input.hasNext()) {
+                sqlStatement.append(input.nextLine());
+                if (sqlStatement.charAt(sqlStatement.length() - 1) == ';') {
+//                    System.out.println("Executing statement: " + sqlStatement);
+                    try {
+                        Statement stmt = connection.createStatement();
+                        stmt.execute(sqlStatement.toString());
+                        sqlStatement = new StringBuilder();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            input.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    private Professor getProfessorFromResultSet(ResultSet rs) throws SQLException
+    {
+        return new Professor(rs.getString(2),rs.getString(3),rs.getString(7),rs.getString(5),rs.getString(6),rs.getDate(4).toLocalDate(),rs.getInt(1),rs.getString(8),rs.getString(9));
+    }
+    private Student getStudentFromResultSet(ResultSet rs,ResultSet rs1) throws SQLException
+    {
+        return new Student(rs.getString(2),rs.getString(3),rs.getString(7),rs.getString(5),rs.getString(6),rs.getDate(4).toLocalDate(),rs1.getString(5),rs1.getString(6),rs1.getInt(3),rs.getInt(1),rs.getString(8),rs.getString(9));
+    }
+    private Subject getSubjectFromResultSet(ResultSet rs) throws SQLException {
+        return new Subject(rs.getString(2),rs.getInt(1),null);
+    }
+
+    public void getPersons() throws SQLException {
+        ResultSet rs=getUsersStmnt.executeQuery();
+        ArrayList<Person> userResult=new ArrayList<>();
+        while(rs.next())
+        {
+            if(rs.getInt(10)==1)
+            {
+                    ResultSet rs1=getStudentsStmnt.executeQuery();
+                    Student stud = getStudentFromResultSet(rs,rs1);
+                    students.add(stud);
+                    users.add(stud);
+
+            }
+            else {
+                Professor prof = getProfessorFromResultSet(rs);
+                users.add(prof);
+                professors.add(prof);
+            }
+        }
+    }
+    public void getSubjectsBase() throws SQLException
+    {
+        ResultSet rs=getSubjectsStmnt.executeQuery();
+        while(rs.next())
+        {
+            getProfessorStmnt.setInt(1,rs.getInt(3));
+            ResultSet rs1=getProfessorStmnt.executeQuery();
+            Professor subjProf=getProfessorFromResultSet(rs1);
+            Subject subject=getSubjectFromResultSet(rs);
+            subject.setProfessor(subjProf);
+            subjects.add(subject);
+        }
+    }
+    public ArrayList<Grades> getGrades() throws SQLException {
+        ResultSet rs=getGradesStmnt.executeQuery();
+        ArrayList<Grades> grades=new ArrayList<>();
+        while(rs.next())
+        {
+            getSubjectStmnt.setInt(1,rs.getInt(2));
+            ResultSet rs1=getSubjectStmnt.executeQuery();
+            Subject sub=getSubjectFromResultSet(rs1);
+            Grades grade=new Grades();
+            grade.setSubject(sub);
+            grade.setGrade(rs.getInt(4));
+            grade.setNumberOfPoints(rs.getInt(5));
+            grade.setId(rs.getInt(3));
+            grades.add(grade);
+        }
+        return grades;
+    }
+
 
     public Student getById(int i)
     {
         for (Student student :students) {
+            System.out.println(student.getId()+" "+i);
             if(student.getId()==i)
                 return student;
         }
@@ -36,7 +150,6 @@ public class Model {
     public static Model getInstance() {
         if (instance == null) {
             instance = new Model();
-            instance.load();
         }
         return instance;
     }
@@ -81,7 +194,7 @@ public class Model {
         this.subjects = subjects;
     }
 
-    public void load()
+    /*public void load()
     {
         Student student=new Student();
         student.setName("Harun");
@@ -164,7 +277,7 @@ public class Model {
             else
                 students.add((Student) person);
         }
-    }
+    }*/
     public void removePerson(Person person)
     {
         users.removeAll(person);
@@ -181,7 +294,6 @@ public class Model {
     public Person findByUsername(String username)
     {
         for (Person per:users) {
-            System.out.println(username);
             if(per.getUsername().equals(username))
                 return per;
         }

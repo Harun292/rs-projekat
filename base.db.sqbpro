@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/ESAD-PC/IdeaProjects/E-Index/base.db" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><current_tab id="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1462"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="GRADES"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="GRADES" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk=""><sort/><column_widths/><filter_values/><display_formats/><hidden_columns/><plot_y_axes/></table><table schema="main" name="STUDENTS" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk=""><sort/><column_widths/><filter_values/><display_formats/><hidden_columns/><plot_y_axes/></table><table schema="main" name="SUBJECTS" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk=""><sort/><column_widths/><filter_values/><display_formats/><hidden_columns/><plot_y_axes/></table><table schema="main" name="USERS" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk=""><sort/><column_widths/><filter_values/><display_formats/><hidden_columns/><plot_y_axes/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">BEGIN TRANSACTION;
+CREATE TABLE &quot;USERS&quot; (
+	&quot;id&quot;	INTEGER NOT NULL,
+	&quot;NAME&quot;	TEXT,
+	&quot;SURNAME&quot;	TEXT,
+	&quot;DATE_OF_BIRTH&quot;	DATE,
+	&quot;PLACE_OF_BIRTH&quot;	TEXT,
+	&quot;LIVING_PLACE&quot;	TEXT,
+	&quot;JMBG&quot;	TEXT,
+	&quot;USERNAME&quot;	TEXT,
+	&quot;PASSWORD&quot;	TEXT,
+	&quot;TYPE&quot;	INTEGER,
+   PRIMARY KEY(&quot;id&quot;)
+);
+INSERT INTO &quot;USERS&quot; VALUES(1,'Harun','Ajkuinić',date('29-02-2000'),'Travnik','Sarajevo','1231231312','hajkunic1','123456',1);
+INSERT INTO &quot;USERS&quot; VALUES(2,'Mirza','Gojak',date('11-02-1998'),'Sarajevo','Sarajevo','4545664','mgojak1','123456',1);
+INSERT INTO &quot;USERS&quot; VALUES(3,'Jasmin','Hodžić',date('29-06-2000'),'Bihać','Sarajevo','66567578','jhodzic1','123456',0);
+CREATE TABLE &quot;STUDENTS&quot; (
+	&quot;ID&quot;	INTEGER,
+	&quot;USER_ID&quot;	INTEGER,
+	&quot;INDEX&quot;	INTEGER,
+	&quot;IMAGE&quot;	TEXT,
+	&quot;MOTHERS_NAME&quot;	TEXT,
+	&quot;FATHERS_NAME&quot;	TEXT,
+	FOREIGN KEY(&quot;USER_ID&quot;) REFERENCES &quot;USERS&quot;(&quot;id&quot;),
+	PRIMARY KEY(&quot;ID&quot;)
+);
+INSERT INTO &quot;STUDENTS&quot; VALUES(1,1,13212,'','Zafira','Esad');
+INSERT INTO &quot;STUDENTS&quot; VALUES(2,2,3434,'','Edita','Samir');
+CREATE TABLE &quot;SUBJECTS&quot; (
+	&quot;ID&quot;	INTEGER NOT NULL,
+	&quot;NAME&quot;	TEXT,
+	&quot;PROF_ID&quot;	INTEGER NOT NULL,
+	FOREIGN KEY(&quot;PROF_ID&quot;) REFERENCES &quot;USERS&quot;(&quot;id&quot;),
+	PRIMARY KEY(&quot;ID&quot;)
+);
+INSERT INTO &quot;SUBJECTS&quot; VALUES(1,'Računarske arhitekture i mreže',3);
+INSERT INTO &quot;SUBJECTS&quot; VALUES(2,'Osnove računarstva',3);
+INSERT INTO &quot;SUBJECTS&quot; VALUES(3,'Razvoj softvera',3);
+CREATE TABLE &quot;GRADES&quot; (
+	&quot;ID&quot;	INTEGER NOT NULL,
+	&quot;SUBJ_ID&quot;	INTEGER,
+	&quot;STUD_ID&quot;	INTEGER,
+	&quot;GRADE&quot;	INTEGER,
+	&quot;NUMBER_OF_POINTS&quot;	INTEGER,
+	FOREIGN KEY(&quot;SUBJ_ID&quot;) REFERENCES &quot;SUBJECTS&quot;(&quot;ID&quot;),
+	FOREIGN KEY(&quot;STUD_ID&quot;) REFERENCES &quot;USERS&quot;(&quot;id&quot;),
+	PRIMARY KEY(&quot;ID&quot;)
+);
+INSERT INTO &quot;GRADES&quot; VALUES(1,1,1,10,95);
+INSERT INTO &quot;GRADES&quot; VALUES(2,2,1,10,95);
+INSERT INTO &quot;GRADES&quot; VALUES(3,1,2,10,95);
+INSERT INTO &quot;GRADES&quot; VALUES(4,2,2,10,95);
+INSERT INTO &quot;GRADES&quot; VALUES(6,3,2,7,65);
+
+COMMIT;</sql><current_tab id="0"/></tab_sql></sqlb_project>

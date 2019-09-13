@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import java.util.ArrayList;
 
 public class classesListController {
+    Model model;
     public  ListView<Subject> classesList;
     private ObservableList<Subject> subjects = FXCollections.observableArrayList();
     private Professor professor = new Professor();
@@ -24,6 +25,10 @@ public class classesListController {
 
     public classesListController(Professor professor) {
         this.professor = professor;
+    }
+    private classesListController()
+    {
+        model=Model.getInstance();
     }
 
 

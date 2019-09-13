@@ -17,11 +17,8 @@ public class StudentController {
     public TableColumn gradeColumn;
     public TableView<Grades> studentTableView;
     private ObservableList<Grades> students;
-    private Student student=new Student();
+    private Student student;
     Model model=Model.getInstance();
-
-
-
 
     public StudentController(Student student) {
         this.student = student;
@@ -37,8 +34,10 @@ public class StudentController {
 
     @FXML
     public void initialize() {
+        System.out.println(student.getId());
         if(model.getById(student.getId())!=null) {
             students = FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
+            System.out.println(model.getById(student.getId()).toString());
             studentTableView.setItems(students);
             pointsColumn.setCellValueFactory(new PropertyValueFactory("numberOfPoints"));
             gradeColumn.setCellValueFactory(new PropertyValueFactory("grade"));

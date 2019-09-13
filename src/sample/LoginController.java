@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class LoginController {
@@ -25,6 +26,29 @@ public class LoginController {
     @FXML
     public void initialize()
     {
+        try {
+            model.getPersons();
+            model.getSubjectsBase();
+            model.getGrades();
+            for (Professor prof:model.getProfessors()) {
+                for (Subject sub:model.getSubjects()) {
+                    if(prof.getId()==sub.getProfessor().getId())
+                    {
+                        prof.getSubjects().add(sub);
+                    }
+                }
+            }
+            for (Grades grade:model.getGrades()) {
+                for (Student stud:model.getStudents()) {
+                    if(stud.getId()==grade.getId())
+                    {
+                        stud.getGrades().add(grade);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         passField.setOnKeyPressed(new EventHandler<KeyEvent>()
         {
             @Override
@@ -50,7 +74,7 @@ public class LoginController {
                         stage.setTitle("E-Index");
                         stage.setScene(new Scene(root));
                         stage.setResizable(false);
-                        userField.getScene().getWindow().hide();
+                        //userField.getScene().getWindow().hide();
                         stage.show();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -58,7 +82,7 @@ public class LoginController {
                 }
                 else if(person!=null&&person.getPassword().equals(passField.getText().trim())){
                     try {
-                        Student student=new Student();
+                        Student student=(Student) person;
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/studentPanel.fxml"));
                         StudentController studentController=new StudentController(student);
                         loader.setController(studentController);
@@ -67,7 +91,7 @@ public class LoginController {
                         stage.setTitle("E-Index");
                         stage.setScene(new Scene(root));
                         stage.setResizable(false);
-                        userField.getScene().getWindow().hide();
+                        //userField.getScene().getWindow().hide();
                         stage.show();
                     } catch (IOException e) {
                         e.printStackTrace();

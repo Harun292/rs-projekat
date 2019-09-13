@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class DetailsController {
 
@@ -31,9 +32,8 @@ public class DetailsController {
     }
 
     @FXML
-    public void initialize() {
-
-        grades= FXCollections.observableArrayList(student.getGrades());
+    public void initialize() throws SQLException {
+        grades=FXCollections.observableArrayList(student.getGrades());
         studentTableView.setItems(grades);
         pointsColumn.setCellValueFactory(new PropertyValueFactory("numberOfPoints"));
         gradeColumn.setCellValueFactory(new PropertyValueFactory("grade"));

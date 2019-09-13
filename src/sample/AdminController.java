@@ -67,6 +67,7 @@ public class AdminController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         students=FXCollections.observableArrayList(model.getStudents());
         professors=FXCollections.observableArrayList(model.getProfessors());
 
@@ -281,9 +282,25 @@ public class AdminController {
                 passwordField.getStyleClass().add("invalid");
             }
         });
+       /* userStudentList.getSelectionModel().selectedItemProperty().addListener((observableValue, student, t1) -> {
+            if(t1 != null){
+                model.setPerson(t1);
+                System.out.println(model.getPerson().toString());
+                userStudentList.refresh();
+                userProfessorList.refresh();
+            }
+        });
 
+        userProfessorList.getSelectionModel().selectedItemProperty().addListener((observableValue, professor, t1) -> {
 
-
+            if(t1 != null){
+                System.out.println(model.getPerson().toString());
+                model.setPerson(t1);
+                userStudentList.refresh();
+                userProfessorList.refresh();
+            }
+        });
+*/
     }
     public void addStudentAction(ActionEvent actionEvent) {
         //students.add(new Student());
@@ -295,6 +312,7 @@ public class AdminController {
     }
 
     public void deleteStudentAction(ActionEvent actionEvent) {
+        if(studentsList.getSelectionModel().getSelectedItem()==null)return;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Do you want to delete student: "+studentsList.getSelectionModel().getSelectedItem());
         ButtonType buttonType = new ButtonType("Yes");
@@ -335,6 +353,7 @@ public class AdminController {
     }
 
     public void deleteProfesorAction(ActionEvent actionEvent) {
+        if(professorList.getSelectionModel().getSelectedItem()==null) return;;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Do you want to delete professor: "+professorList.getSelectionModel().getSelectedItem());
         ButtonType buttonType = new ButtonType("Yes");
@@ -395,7 +414,7 @@ public class AdminController {
     }
 
     public void deleteClassAction(ActionEvent actionEvent) {
-
+        if(classesTable.getSelectionModel().selectedItemProperty().getValue()==null)return;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Do you want to delete class: "+classesTable.getSelectionModel().getSelectedItem());
         ButtonType buttonType = new ButtonType("Yes");
@@ -435,10 +454,20 @@ public class AdminController {
             alert.close();
         }
     }
+    public void userAddMouse()
+    {
+        model.setPerson(userStudentList.getSelectionModel().getSelectedItem());
+    }
+    public void userProfAddMouse()
+    {
+        model.setPerson(userProfessorList.getSelectionModel().getSelectedItem());
+    }
+
 
     public void deleteUserAction(ActionEvent actionEvent) {
-
-        if (userStudentList.getSelectionModel().getSelectedItem()!=null&&userProfessorList.getSelectionModel().getSelectedItem()==null) {
+        if((userProfessorList.getItems().isEmpty()&&userStudentList.getItems().isEmpty())||(userProfessorList.getSelectionModel().isEmpty()&&userStudentList.getSelectionModel().isEmpty()))
+            return;
+        if (model.getPerson() instanceof Student) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setContentText("Do you want to delete user: "+userStudentList.getSelectionModel().getSelectedItem());
             ButtonType buttonType = new ButtonType("Yes");
@@ -452,10 +481,10 @@ public class AdminController {
             else
                 alert.close();
         }
-
-       else {
+        else if(model.getPerson() instanceof Professor)
+        {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Do you want to delete user: "+userProfessorList.getSelectionModel().getSelectedItem());
+            alert.setContentText("Do you want to delete user: " + userProfessorList.getSelectionModel().getSelectedItem());
             ButtonType buttonType = new ButtonType("Yes");
             ButtonType buttonType1=new ButtonType("No");
             alert.getButtonTypes().setAll(buttonType,buttonType1);
@@ -466,12 +495,14 @@ public class AdminController {
                 classesTable.setItems(subjects);
                 classesTable.refresh();
                 model.getProfessors().removeAll(userProfessorList.getSelectionModel().getSelectedItem());
+                userProfessorList.refresh();
             }
             else
                 alert.close();
         }
-            userProfessorList.refresh();
 
-
+       else {
+          return;
+        }
     }
 }
