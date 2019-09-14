@@ -15,6 +15,7 @@ public class Person {
     SimpleStringProperty username=new SimpleStringProperty("");
     SimpleStringProperty password=new SimpleStringProperty("");
     int id;
+    Model model=Model.getInstance();
 
     public int getId() {
         return id;
@@ -25,6 +26,7 @@ public class Person {
     }
 
     public Person() {
+        this.id=model.getNextUserId();
     }
 
     public Person(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth,int id,String username,String password) {

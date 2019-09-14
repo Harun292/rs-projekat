@@ -3,11 +3,13 @@ package sample;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Subject {
+    Model model=Model.getInstance();
     SimpleStringProperty subjectName=new SimpleStringProperty();
     int id;
     Professor professor=new Professor();
 
     public Subject() {
+        this.id=model.getNextSubjectId();
     }
 
     public Subject(String subjectName, int id, Professor professor) {

@@ -40,7 +40,7 @@ public class LoginController {
             }
             for (Grades grade:model.getGrades()) {
                 for (Student stud:model.getStudents()) {
-                    if(stud.getId()==grade.getId())
+                    if(stud.getId()==grade.getStudentId())
                     {
                         stud.getGrades().add(grade);
                     }
@@ -74,7 +74,7 @@ public class LoginController {
                         stage.setTitle("E-Index");
                         stage.setScene(new Scene(root));
                         stage.setResizable(false);
-                        //userField.getScene().getWindow().hide();
+                        userField.getScene().getWindow().hide();
                         stage.show();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -91,7 +91,7 @@ public class LoginController {
                         stage.setTitle("E-Index");
                         stage.setScene(new Scene(root));
                         stage.setResizable(false);
-                        //userField.getScene().getWindow().hide();
+                        userField.getScene().getWindow().hide();
                         stage.show();
                     } catch (IOException e) {
                         e.printStackTrace();

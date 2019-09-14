@@ -22,8 +22,9 @@ public class Model {
     ObservableList<Subject> subjects=FXCollections.observableArrayList();
     Connection connection;
     private PreparedStatement getUsersStmnt,getStudentsStmnt,getSubjectsStmnt,getGradesStmnt,getProfessorStmnt,getSubjectStmnt,getIdUsersStmnt,getIdStudentsStmnt,getIdSubjectsStmnt,getIdGradesStmnt;
-    private PreparedStatement addPersonStmnt,addStudentStmnt;
+    private PreparedStatement addPersonStmnt,addStudentStmnt,addSubjectStmnt,addGradeStmnt;
     private PreparedStatement updatePersonStmnt,updateStudentStmnt;
+    private PreparedStatement deleteGrade2Stmnt,deletePersonStmnt,deleteStudentStmnt,deleteSubjectStmnt,deleteGradeStmnt,deleteGrade1Stmnt;
     private Model() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:base.db");
@@ -48,9 +49,17 @@ public class Model {
             getIdSubjectsStmnt=connection.prepareStatement("SELECT MAX(ID)+1 FROM SUBJECTS");
             addPersonStmnt=connection.prepareStatement("INSERT INTO USERS VALUES(?,?,?,?,?,?,?,?,?,?)");
             addStudentStmnt=connection.prepareStatement("INSERT INTO STUDENTS VALUES(?,?,?,?,?,?)");
-            updateStudentStmnt=connection.prepareStatement("UPDATE STUDENTS SET INDEKS=?,MOTHERS_NAME=?,FATHERS_NAME=? WHERE ID=?");
+            updateStudentStmnt=connection.prepareStatement("UPDATE STUDENTS SET INDEKS=?,MOTHERS_NAME=?,FATHERS_NAME=? WHERE USER_ID=?");
             updatePersonStmnt=connection.prepareStatement("UPDATE USERS SET NAME=?,SURNAME=?,DATE_OF_BIRTH=?,PLACE_OF_BIRTH=?,LIVING_PLACE=?,JMBG=?,USERNAME=?,PASSWORD=? WHERE id=?");
-           } catch (SQLException e) {
+            deletePersonStmnt=connection.prepareStatement("DELETE FROM USERS WHERE id=?");
+            deleteStudentStmnt=connection.prepareStatement("DELETE FROM STUDENTS WHERE USER_ID=?");
+            addSubjectStmnt=connection.prepareStatement("INSERT INTO SUBJECTS VALUES(?,?,?)");
+            deleteSubjectStmnt=connection.prepareStatement("DELETE FROM SUBJECTS WHERE ID=?");
+            deleteGradeStmnt=connection.prepareStatement("DELETE FROM GRADES WHERE SUBJ_ID=? AND STUD_ID=?");
+            addGradeStmnt=connection.prepareStatement("INSERT INTO GRADES VALUES(?,?,?,?,?)");
+            deleteGrade1Stmnt=connection.prepareStatement("DELETE FROM GRADES WHERE SUBJ_ID=?");
+            deleteGrade2Stmnt=connection.prepareStatement("DELETE FROM GRADES WHERE STUD_ID=?");
+            } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -63,7 +72,6 @@ public class Model {
             while (input.hasNext()) {
                 sqlStatement.append(input.nextLine());
                 if (sqlStatement.charAt(sqlStatement.length() - 1) == ';') {
-//                    System.out.println("Executing statement: " + sqlStatement);
                     try {
                         Statement stmt = connection.createStatement();
                         stmt.execute(sqlStatement.toString());
@@ -92,22 +100,23 @@ public class Model {
 
     public void getPersons() throws SQLException {
         ResultSet rs=getUsersStmnt.executeQuery();
-        ArrayList<Person> userResult=new ArrayList<>();
-        ResultSet rs1=getStudentsStmnt.executeQuery();
-        while(rs.next()&&rs1.next())
+        while (rs.next())
         {
             if(rs.getInt(10)==1)
             {
-                    Student stud = getStudentFromResultSet(rs,rs1);
-                    students.add(stud);
-                System.out.println(stud.getMothersName());
-                    users.add(stud);
-
+                ResultSet rs1=getStudentsStmnt.executeQuery();
+                while (rs1.next()) {
+                    if(rs1.getInt(2)==rs.getInt(1)) {
+                        Student stud = getStudentFromResultSet(rs, rs1);
+                        students.add(stud);
+                        users.add(stud);
+                    }
+                }
             }
             else {
-                Professor prof = getProfessorFromResultSet(rs);
-                users.add(prof);
+                Professor prof=getProfessorFromResultSet(rs);
                 professors.add(prof);
+                users.add(prof);
             }
         }
     }
@@ -136,31 +145,62 @@ public class Model {
             grade.setSubject(sub);
             grade.setGrade(rs.getInt(4));
             grade.setNumberOfPoints(rs.getInt(5));
-            grade.setId(rs.getInt(3));
+            grade.setStudentId(rs.getInt(3));
+            grade.setId(rs.getInt(1));
             grades.add(grade);
         }
         return grades;
+    }
+    public int getNextUserId() {
+        ResultSet rs;
+        int id = 1;
+        try {
+            rs = getIdUsersStmnt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+    public int getNextSubjectId() {
+        ResultSet rs;
+        int id = 1;
+        try {
+            rs = getIdSubjectsStmnt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+    public int getNextGradeId() {
+        ResultSet rs;
+        int id = 1;
+        try {
+            rs = getIdGradesStmnt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
     }
     public void addUserBase(Person person) throws SQLException
     {
         //java.sql.Date date=new java.sql.Date(Long.parseLong(person.getDateOfBirth().toString()));
         ResultSet rs=getIdUsersStmnt.executeQuery();
-        int id=rs.getInt(1);
-        addPersonStmnt.setInt(1,id);
-        addPersonStmnt.setString(2,person.getName());
-        addPersonStmnt.setString(3,person.getSurname());
-        addPersonStmnt.setDate(4,java.sql.Date.valueOf(person.getDateOfBirth()));
-        addPersonStmnt.setString(5,person.getPlaceOfBirth());
-        addPersonStmnt.setString(6,person.getLivingPlace());
-        addPersonStmnt.setString(7,person.getJmbg());
-        addPersonStmnt.setString(8,person.getUsername());
-        addPersonStmnt.setString(9,person.getPassword());
-        if(person instanceof Professor)
-        addPersonStmnt.setInt(10,1);
-        else addPersonStmnt.setInt(10,0);
-        addPersonStmnt.executeUpdate();
+        int id=0;
+        while (rs.next()) {
+            id = rs.getInt(1);
+        }
         if(person instanceof Student)
         {
+            addPersonStmnt.setInt(10,1);
             ResultSet rs1=getIdStudentsStmnt.executeQuery();
             int id1=rs1.getInt(1);
             addStudentStmnt.setInt(1,id1);;
@@ -171,6 +211,19 @@ public class Model {
             addStudentStmnt.setString(6,((Student) person).getFathersName());
             addStudentStmnt.executeUpdate();
         }
+        else {
+            addPersonStmnt.setInt(10,0);
+        }
+        addPersonStmnt.setInt(1,id);
+        addPersonStmnt.setString(2,person.getName());
+        addPersonStmnt.setString(3,person.getSurname());
+        addPersonStmnt.setDate(4,java.sql.Date.valueOf(person.getDateOfBirth()));
+        addPersonStmnt.setString(5,person.getPlaceOfBirth());
+        addPersonStmnt.setString(6,person.getLivingPlace());
+        addPersonStmnt.setString(7,person.getJmbg());
+        addPersonStmnt.setString(8,person.getUsername());
+        addPersonStmnt.setString(9,person.getPassword());
+        addPersonStmnt.executeUpdate();
     }
 
     public void updateUserBase(Person person) throws SQLException {
@@ -193,11 +246,52 @@ public class Model {
         updatePersonStmnt.setInt(9,person.getId());
         updatePersonStmnt.executeUpdate();
     }
+    public void deletePersonBase(Person person) throws SQLException {
+        deletePersonStmnt.setInt(1,person.getId());
+        if(person instanceof Student)
+        {
+            deleteStudentStmnt.setInt(1,person.getId());
+            deleteGrade2Stmnt.setInt(1,person.getId());
+            deleteGrade2Stmnt.executeUpdate();
+            deletePersonStmnt.executeUpdate();
+            deleteStudentStmnt.executeUpdate();
+        }
+        deletePersonStmnt.executeUpdate();
+    }
+    public void addSubjectBase(Subject subject) throws SQLException {
+        int id;
+        ResultSet rs=getIdSubjectsStmnt.executeQuery();
+        id=rs.getInt(1);
+        addSubjectStmnt.setInt(1,id);
+        addSubjectStmnt.setString(2,subject.getSubjectName());
+        addSubjectStmnt.setInt(3,subject.getProfessor().getId());
+        addSubjectStmnt.executeUpdate();
+    }
+    public void deleteSubjectBase(Subject subject) throws SQLException {
+        deleteSubjectStmnt.setInt(1,subject.getId());
+        deleteGrade1Stmnt.setInt(1,subject.getId());
+        deleteGrade1Stmnt.executeUpdate();
+        deleteSubjectStmnt.executeUpdate();
+    }
+    public void addGradeBase(Student student,Grades grade) throws SQLException {
+        ResultSet rs=getIdGradesStmnt.executeQuery();
+        int id=rs.getInt(1);
+        addGradeStmnt.setInt(1,id);
+        addGradeStmnt.setInt(2,grade.getSubject().getId());
+        addGradeStmnt.setInt(3,student.getId());
+        addGradeStmnt.setInt(4,grade.getGrade());
+        addGradeStmnt.setInt(5,grade.getNumberOfPoints());
+        addGradeStmnt.executeUpdate();
+    }
+    public void deleteGradeBase(Student student,Grades grade) throws SQLException {
+        deleteGradeStmnt.setInt(1,grade.getId());
+        deleteGradeStmnt.setInt(2,student.getId());
+        deleteGradeStmnt.executeUpdate();
+    }
 
     public Student getById(int i)
     {
         for (Student student :students) {
-            System.out.println(student.getId()+" "+i);
             if(student.getId()==i)
                 return student;
         }

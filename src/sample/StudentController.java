@@ -34,7 +34,6 @@ public class StudentController {
 
     @FXML
     public void initialize() {
-        System.out.println(student.getId());
         if(model.getById(student.getId())!=null) {
             students = FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
             System.out.println(model.getById(student.getId()).toString());

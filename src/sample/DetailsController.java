@@ -55,17 +55,26 @@ public class DetailsController {
                 model.getById(student.getId()).getGrades().add(grade);
                 grades=FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
                 studentTableView.setItems(grades);
+                try {
+                    model.addGradeBase(student,grade);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 studentTableView.refresh();
             }
         });
 
     }
-    public void deleteDetails()
-    {
-        model.getById(student.getId()).getGrades().remove(studentTableView.getSelectionModel().getSelectedItem());
-        grades=FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
-        studentTableView.setItems(grades);
-        studentTableView.refresh();
+    public void deleteDetails() throws SQLException {
+        if(studentTableView.getSelectionModel().getSelectedItem()!=null){
+
+            model.deleteGradeBase(student,studentTableView.getSelectionModel().getSelectedItem());
+            model.getById(student.getId()).getGrades().remove(studentTableView.getSelectionModel().getSelectedItem());
+            grades=FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
+            studentTableView.setItems(grades);
+            studentTableView.refresh();
+        }
+        else return;
     }
 
 

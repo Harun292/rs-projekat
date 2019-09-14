@@ -64,7 +64,7 @@ public class AdminController {
     @FXML
     public void initialize() {
         try {
-            image=new Image(new FileInputStream("C:\\Users\\ESAD-PC\\IdeaProjects\\E-Index\\resources\\images\\prijava.jpg"));
+            image=new Image(new FileInputStream("C:\\Users\\ESAD-PC\\IdeaProjects\\E-Index\\resources\\images\\rs.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -113,6 +113,7 @@ public class AdminController {
                 classesTable.refresh();
                 userProfessorList.refresh();
                 professorList.refresh();
+
         });
         studentsList.setItems(model.getStudents());
         studentsList.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -157,9 +158,10 @@ public class AdminController {
                 imageView.setImage(image);
             }
             userStudentList.refresh();
+
         });
         nameField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getName())) {
                 nameField.getStyleClass().removeAll("invalid");
                 studentsList.getSelectionModel().getSelectedItem().setName(newIme);
                 try {
@@ -167,12 +169,13 @@ public class AdminController {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                nameField.getStyleClass().add("invalid");
+            } if(!newIme.isEmpty()) {
+                nameField.getStyleClass().removeAll("invalid");
             }
+            else nameField.getStyleClass().addAll("invalid");
         });
         surnameField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getSurname())) {
                 surnameField.getStyleClass().removeAll("invalid");
                 studentsList.getSelectionModel().getSelectedItem().setSurname(newIme);
                 try {
@@ -180,254 +183,243 @@ public class AdminController {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                surnameField.getStyleClass().add("invalid");
+            } if (!newIme.isEmpty()) {
+                surnameField.getStyleClass().removeAll("invalid");
             }
+            else surnameField.getStyleClass().addAll("invalid");
         });
         indexField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getIndex())) {
                 indexField.getStyleClass().removeAll("invalid");
-                studentsList.getSelectionModel().getSelectedItem().setIndex(Integer.parseInt(newIme));
                 try {
                     model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
+                }}
+           if (!newIme.isEmpty()) {
+                    indexField.getStyleClass().removeAll("invalid");
                 }
-            } else {
-                indexField.getStyleClass().add("invalid");
-            }
+                else indexField.getStyleClass().addAll("invalid");
         });
 
         userNameFieldStud.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getUsername())) {
                 userNameFieldStud.getStyleClass().removeAll("invalid");
-                studentsList.getSelectionModel().getSelectedItem().setUsername(newIme);
                 try {
                     model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
+                }}
+           if(!newIme.isEmpty()) {
+                    userNameFieldStud.getStyleClass().removeAll("invalid");
                 }
-            } else {
-                userNameFieldStud.getStyleClass().add("invalid");
-            }
+                else userNameFieldStud.getStyleClass().addAll("invalid");
         });
 
 
         passwordFieldStud.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getPassword())) {
                 passwordFieldStud.getStyleClass().removeAll("invalid");
-                studentsList.getSelectionModel().getSelectedItem().setPassword(newIme);
                 try {
                     model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                passwordFieldStud.getStyleClass().add("invalid");
+            } if(!newIme.isEmpty()) {
+                passwordFieldStud.getStyleClass().removeAll("invalid");
             }
+            else passwordFieldStud.getStyleClass().addAll("invalid");
         });
 
         jmbgField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getJmbg())) {
                 jmbgField.getStyleClass().removeAll("invalid");
-                studentsList.getSelectionModel().getSelectedItem().setJmbg(newIme);
                 try {
                     model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                jmbgField.getStyleClass().add("invalid");
+            }  if(!newIme.isEmpty()) {
+                jmbgField.getStyleClass().removeAll("invalid");
             }
+            else jmbgField.getStyleClass().addAll("invalid");
         });
         livingPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getLivingPlace())) {
                 livingPlaceField.getStyleClass().removeAll("invalid");
-                studentsList.getSelectionModel().getSelectedItem().setLivingPlace(newIme);
                 try {
                     model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                livingPlaceField.getStyleClass().add("invalid");
+            } if(!newIme.isEmpty()) {
+                livingPlaceField.getStyleClass().removeAll("invalid");
             }
+            else livingPlaceField.getStyleClass().addAll("invalid");
         });
         birthPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getPlaceOfBirth())) {
                 birthPlaceField.getStyleClass().removeAll("invalid");
-                studentsList.getSelectionModel().getSelectedItem().setPlaceOfBirth(newIme);
                 try {
                     model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                birthPlaceField.getStyleClass().add("invalid");
+            } if(!newIme.isEmpty()) {
+                birthPlaceField.getStyleClass().removeAll("invalid");
             }
+            else birthPlaceField.getStyleClass().addAll("invalid");
         });
 
         motherField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getMothersName())) {
                 motherField.getStyleClass().removeAll("invalid");
-                studentsList.getSelectionModel().getSelectedItem().setMothersName(newIme);
                 try {
                     model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                motherField.getStyleClass().addAll("invalid");
+            } if(!newIme.isEmpty()) {
+                motherField.getStyleClass().removeAll("invalid");
             }
+            else motherField.getStyleClass().addAll("invalid");
         });
 
         fatherField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(studentsList.getSelectionModel().getSelectedItem().getFathersName())) {
                 fatherField.getStyleClass().removeAll("invalid");
-                studentsList.getSelectionModel().getSelectedItem().setFathersName(newIme);
                 try {
                     model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                fatherField.getStyleClass().addAll("invalid");
+            } if(!newIme.isEmpty()) {
+                fatherField.getStyleClass().removeAll("invalid");
             }
+            else fatherField.getStyleClass().addAll("invalid");
         });
         datePicker.valueProperty().addListener((observableValue, localDate, t1) -> {
-            if(datePicker.getValue()!=null) {
-                studentsList.getSelectionModel().getSelectedItem().setDateOfBirth(t1);
-                datePicker.getStyleClass().removeAll("invalid");
-            }
-            else
-            {
-                datePicker.getStyleClass().add("invalid");
-            }
-            try {
-                model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if(datePicker.getValue()!=null&&!t1.equals(studentsList.getSelectionModel().getSelectedItem().getDateOfBirth())) {
+                try {
+                    model.updateUserBase(studentsList.getSelectionModel().getSelectedItem());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
 
         });
         professorNameField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(professorList.getSelectionModel().getSelectedItem().getName())) {
                 professorNameField.getStyleClass().removeAll("invalid");
-                professorList.getSelectionModel().getSelectedItem().setName(newIme);
                 try {
                     model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                professorNameField.getStyleClass().add("invalid");
+            } if(!newIme.isEmpty()) {
+                professorNameField.getStyleClass().removeAll("invalid");
             }
+            else professorNameField.getStyleClass().addAll("invalid");
         });
         professorSurnameField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(professorList.getSelectionModel().getSelectedItem().getSurname())) {
                 professorSurnameField.getStyleClass().removeAll("invalid");
-                professorList.getSelectionModel().getSelectedItem().setSurname(newIme);
                 try {
                     model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                professorSurnameField.getStyleClass().add("invalid");
+            } if(!newIme.isEmpty()) {
+                professorSurnameField.getStyleClass().removeAll("invalid");
             }
-        });
-        professorBirthPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
-                professorBirthPlaceField.getStyleClass().removeAll("invalid");
-                professorList.getSelectionModel().getSelectedItem().setPlaceOfBirth(newIme);
-                try {
-                    model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                professorBirthPlaceField.getStyleClass().add("invalid");
-            }
-        });
-        professorLivingPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
-                professorLivingPlaceField.getStyleClass().removeAll("invalid");
-                professorList.getSelectionModel().getSelectedItem().setLivingPlace(newIme);
-                try {
-                    model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                professorLivingPlaceField.getStyleClass().add("invalid");
-            }
+            else professorSurnameField.getStyleClass().addAll("invalid");
         });
         professorJmbgField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+            if (!newIme.isEmpty()&&!newIme.equals(professorList.getSelectionModel().getSelectedItem().getJmbg())) {
                 professorJmbgField.getStyleClass().removeAll("invalid");
-                professorList.getSelectionModel().getSelectedItem().setJmbg(newIme);
                 try {
                     model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                professorJmbgField.getStyleClass().add("invalid");
+            }  if(!newIme.isEmpty()) {
+                professorJmbgField.getStyleClass().removeAll("invalid");
+            }
+            else professorJmbgField.getStyleClass().addAll("invalid");
+        });
+        professorLivingPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()&&!newIme.equals(professorList.getSelectionModel().getSelectedItem().getLivingPlace())) {
+                professorLivingPlaceField.getStyleClass().removeAll("invalid");
+                try {
+                    model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } if(!newIme.isEmpty()) {
+                professorLivingPlaceField.getStyleClass().removeAll("invalid");
+            }
+            else professorLivingPlaceField.getStyleClass().addAll("invalid");
+        });
+        professorBirthPlaceField.textProperty().addListener((obs, oldIme, newIme) -> {
+            if (!newIme.isEmpty()&&!newIme.equals(professorList.getSelectionModel().getSelectedItem().getPlaceOfBirth())) {
+                professorBirthPlaceField.getStyleClass().removeAll("invalid");
+                try {
+                    model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } if(!newIme.isEmpty()) {
+                professorBirthPlaceField.getStyleClass().removeAll("invalid");
+            }
+            else professorBirthPlaceField.getStyleClass().addAll("invalid");
+        });
+        professorDatePicker.valueProperty().addListener((obs, oldIme, newIme) -> {
+            if (professorDatePicker.getValue()!=null&&!newIme.equals(professorList.getSelectionModel().getSelectedItem().getDateOfBirth())) {
+                try {
+                    model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
-        userNameField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+        userNameField.textProperty().addListener((observableValue, s, t1) -> {
+            if (!t1.isEmpty()&&!t1.equals(professorList.getSelectionModel().getSelectedItem().getUsername())) {
+                try {
+                    model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(!t1.isEmpty())
+            {
                 userNameField.getStyleClass().removeAll("invalid");
-                professorList.getSelectionModel().getSelectedItem().setUsername(newIme);
+            }
+            else userNameField.getStyleClass().addAll("invalid");
+        });
+        passwordField.textProperty().addListener((observableValue, s, t1) -> {
+            if (!t1.isEmpty()&&!t1.equals(professorList.getSelectionModel().getSelectedItem().getUsername())) {
                 try {
                     model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
-                userNameField.getStyleClass().add("invalid");
             }
-        });
-        passwordField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (!newIme.isEmpty()) {
+             if(!t1.isEmpty())
+            {
                 passwordField.getStyleClass().removeAll("invalid");
-                professorList.getSelectionModel().getSelectedItem().setPassword(newIme);
-                try {
-                    model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                passwordField.getStyleClass().add("invalid");
             }
-        });
-       /* userStudentList.getSelectionModel().selectedItemProperty().addListener((observableValue, student, t1) -> {
-            if(t1 != null){
-                model.setPerson(t1);
-                System.out.println(model.getPerson().toString());
-                userStudentList.refresh();
-                userProfessorList.refresh();
-            }
+            else passwordField.getStyleClass().addAll("invalid");
         });
 
-        userProfessorList.getSelectionModel().selectedItemProperty().addListener((observableValue, professor, t1) -> {
-
-            if(t1 != null){
-                System.out.println(model.getPerson().toString());
-                model.setPerson(t1);
-                userStudentList.refresh();
-                userProfessorList.refresh();
-            }
-        });
-*/
     }
+
     public void addStudentAction(ActionEvent actionEvent) throws SQLException {
         //students.add(new Student());
         model.getStudents().add(new Student());
         studentsList.setItems(model.getStudents());
         studentsList.getSelectionModel().selectLast();
-        studentsList.refresh();
         model.addUserBase(studentsList.getSelectionModel().getSelectedItem());
+        studentsList.refresh();
 
     }
 
@@ -440,6 +432,11 @@ public class AdminController {
         alert.getButtonTypes().setAll(buttonType,buttonType1);
         Optional<ButtonType> result = alert.showAndWait();
         if(result.get()==buttonType) {
+            try {
+                model.deletePersonBase(studentsList.getSelectionModel().getSelectedItem());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             model.getStudents().removeAll(studentsList.getSelectionModel().getSelectedItem());
             //students.removeAll(studentsList.getSelectionModel().getSelectedItem());
             studentsList.setItems(model.getStudents());
@@ -466,14 +463,14 @@ public class AdminController {
     public void addProfessorAction(ActionEvent actionEvent) throws SQLException {
         //professors.add(new Professor());
         model.getProfessors().add(new Professor());
-        professorList.getSelectionModel().selectLast();
-        professorList.setItems(model.getProfessors());
-        //model.getProfessors().add(professorList.getSelectionModel().getSelectedItem());
-        professorList.refresh();
         model.addUserBase(professorList.getSelectionModel().getSelectedItem());
+        professorList.getSelectionModel().selectLast();
+        //model.getProfessors().add(professorList.getSelectionModel().getSelectedItem());
+        professorList.setItems(model.getProfessors());
+        professorList.refresh();
     }
 
-    public void deleteProfesorAction(ActionEvent actionEvent) {
+    public void deleteProfesorAction(ActionEvent actionEvent) throws SQLException {
         if(professorList.getSelectionModel().getSelectedItem()==null) return;;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Do you want to delete professor: "+professorList.getSelectionModel().getSelectedItem());
@@ -482,6 +479,7 @@ public class AdminController {
         alert.getButtonTypes().setAll(buttonType,buttonType1);
         Optional<ButtonType> result = alert.showAndWait();
         if(result.get()==buttonType) {
+            model.deletePersonBase(professorList.getSelectionModel().getSelectedItem());
             model.removeByProfessor(professorList.getSelectionModel().getSelectedItem());
             subjects = FXCollections.observableArrayList(model.getSubjects());
             classesTable.setItems(subjects);
@@ -534,7 +532,7 @@ public class AdminController {
 
     }
 
-    public void deleteClassAction(ActionEvent actionEvent) {
+    public void deleteClassAction(ActionEvent actionEvent) throws SQLException {
         if(classesTable.getSelectionModel().selectedItemProperty().getValue()==null)return;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Do you want to delete class: "+classesTable.getSelectionModel().getSelectedItem());
@@ -546,6 +544,7 @@ public class AdminController {
             for (Professor prof : model.getProfessors()) {
                 prof.getSubjects().remove(classesTable.getSelectionModel().selectedItemProperty().get());
             }
+            model.deleteSubjectBase(classesTable.getSelectionModel().getSelectedItem());
             model.getSubjects().removeAll(classesTable.getSelectionModel().selectedItemProperty().get());
             classesTable.setItems(model.getSubjects());
             classesTable.refresh();
@@ -585,7 +584,7 @@ public class AdminController {
     }
 
 
-    public void deleteUserAction(ActionEvent actionEvent) {
+    public void deleteUserAction(ActionEvent actionEvent) throws SQLException {
         if((userProfessorList.getItems().isEmpty()&&userStudentList.getItems().isEmpty())||(userProfessorList.getSelectionModel().isEmpty()&&userStudentList.getSelectionModel().isEmpty()))
             return;
         if (model.getPerson() instanceof Student) {
@@ -596,6 +595,7 @@ public class AdminController {
             alert.getButtonTypes().setAll(buttonType,buttonType1);
             Optional<ButtonType> result = alert.showAndWait();
             if(result.get()==buttonType) {
+                model.deletePersonBase(userStudentList.getSelectionModel().getSelectedItem());
                 model.getStudents().removeAll(userStudentList.getSelectionModel().getSelectedItem());
                 userStudentList.refresh();
             }
@@ -615,6 +615,7 @@ public class AdminController {
                 subjects = FXCollections.observableArrayList(model.getSubjects());
                 classesTable.setItems(subjects);
                 classesTable.refresh();
+                model.deletePersonBase(userProfessorList.getSelectionModel().getSelectedItem());
                 model.getProfessors().removeAll(userProfessorList.getSelectionModel().getSelectedItem());
                 userProfessorList.refresh();
             }

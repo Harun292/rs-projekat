@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class addClassController {
@@ -47,11 +48,12 @@ public class addClassController {
 
     }
 
-    public void okAction(ActionEvent actionEvent) {
+    public void okAction(ActionEvent actionEvent) throws SQLException {
         if(ok&&ok1) {
             subject = new Subject();
             subject.setProfessor(addClassChoice.getSelectionModel().getSelectedItem());
             subject.setSubjectName(addClassField.getText());
+            model.addSubjectBase(subject);
             Stage stage = (Stage) addClassField.getScene().getWindow();
             stage.close();
         }

@@ -21,7 +21,7 @@ public class Student extends Person {
     }
 
     public Student() {
-        super();
+        this.id=model.getNextUserId();
     }
 
     public Student(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth, String mothersName, String fathersName, int index,int id,String username,String password) {
