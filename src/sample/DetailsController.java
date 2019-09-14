@@ -8,12 +8,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 public class DetailsController {
@@ -78,6 +83,43 @@ public class DetailsController {
     }
 
 
+    public void generateTxt()
+    {
+        if(student.getGrades().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Report not generated");
+            alert.setHeaderText("No appointments in table");
+            alert.showAndWait();
+            return;
+        }
+        PrintWriter output = null;
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("JavaFX Projects");
+        File defaultDirectory = new File(System.getProperty("user.home"));
+        chooser.setInitialDirectory(defaultDirectory);
+        File file = chooser.showSaveDialog(new Stage());
+        try {
+            FileWriter writer = new FileWriter(file, false);
+            output = new PrintWriter(writer);
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Report not generated");
+            alert.setHeaderText("Report could not be generated at " + file.getAbsolutePath());
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        if(output != null) {
+            for (Grades student:student.getGrades()) {
+                output.println (String.format("%3d" , student.getNumberOfPoints()) + " " +
+                        String.format("%3d",student.getGrade()) + " " + String.format("%-20s",student.getSubject().toString()));
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Report generated");
+            alert.setHeaderText("Report generated at " + file.getAbsolutePath());
+            alert.showAndWait();
+            output.close();
+        }
+    }
 
 
 

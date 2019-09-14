@@ -22,6 +22,7 @@
         <buttons>
           <Button mnemonicParsing="false" onAction="#addDetails" text="Add" />
             <Button mnemonicParsing="false" onAction="#deleteDetails" text="Delete" />
+            <Button mnemonicParsing="false" onAction="#generateTxt" text="Generate txt" />
         </buttons>
          <BorderPane.margin>
             <Insets right="10.0" />
