@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -54,7 +55,7 @@ public class Model {
             deletePersonStmnt=connection.prepareStatement("DELETE FROM USERS WHERE id=?");
             deleteStudentStmnt=connection.prepareStatement("DELETE FROM STUDENTS WHERE USER_ID=?");
             addSubjectStmnt=connection.prepareStatement("INSERT INTO SUBJECTS VALUES(?,?,?)");
-            deleteSubjectStmnt=connection.prepareStatement("DELETE FROM SUBJECTS WHERE ID=?");
+            deleteSubjectStmnt=connection.prepareStatement("DELETE FROM SUBJECTS WHERE PROF_ID=?");
             deleteGradeStmnt=connection.prepareStatement("DELETE FROM GRADES WHERE SUBJ_ID=? AND STUD_ID=?");
             addGradeStmnt=connection.prepareStatement("INSERT INTO GRADES VALUES(?,?,?,?,?)");
             deleteGrade1Stmnt=connection.prepareStatement("DELETE FROM GRADES WHERE SUBJ_ID=?");
@@ -253,10 +254,28 @@ public class Model {
             deleteStudentStmnt.setInt(1,person.getId());
             deleteGrade2Stmnt.setInt(1,person.getId());
             deleteGrade2Stmnt.executeUpdate();
-            deletePersonStmnt.executeUpdate();
             deleteStudentStmnt.executeUpdate();
+            deletePersonStmnt.executeUpdate();
+        }else {
+            Professor pr= (Professor) person;
+            int pomoc=0;
+            for (Subject sub:pr.getSubjects()) {
+                System.out.println(sub.getProfessor().toString());
+               if(sub.getProfessor().getId()==person.getId()){
+                   System.out.println("nesto");
+                   pomoc=sub.getId();
+                   deleteGrade1Stmnt.setInt(1,pomoc);
+                   deleteGrade1Stmnt.executeUpdate();
+               }
+                System.out.println(pomoc);
+            }
+            if(pomoc==0){
+                deletePersonStmnt.executeUpdate();
+            }
+            deleteSubjectStmnt.setInt(1,person.getId());
+            deleteSubjectStmnt.executeUpdate();
+            deletePersonStmnt.executeUpdate();
         }
-        deletePersonStmnt.executeUpdate();
     }
     public void addSubjectBase(Subject subject) throws SQLException {
         int id;

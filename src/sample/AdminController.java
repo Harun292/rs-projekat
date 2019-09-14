@@ -397,8 +397,9 @@ public class AdminController {
             else userNameField.getStyleClass().addAll("invalid");
         });
         passwordField.textProperty().addListener((observableValue, s, t1) -> {
-            if (!t1.isEmpty()&&!t1.equals(professorList.getSelectionModel().getSelectedItem().getUsername())) {
+            if (!t1.isEmpty()&&!t1.equals(professorList.getSelectionModel().getSelectedItem().getPassword())) {
                 try {
+                    professorList.getSelectionModel().getSelectedItem().setPassword(t1);
                     model.updateUserBase(professorList.getSelectionModel().getSelectedItem());
                 } catch (SQLException e) {
                     e.printStackTrace();
