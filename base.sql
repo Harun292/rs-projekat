@@ -13,7 +13,7 @@ CREATE TABLE "USERS" (
    PRIMARY KEY("id")
 );
 INSERT INTO "USERS" VALUES(1,'Harun','Ajkuinić',3233232,'Travnik','Sarajevo','1231231312','hajkunic1','123456',1);
-INSERT INTO "USERS" VALUES(2,'Faris','Agić',323233,'Sarajevo','Sarajevo','4545664','fagic3','123456',1);
+INSERT INTO "USERS" VALUES(2,'Faris','Agić',323233,'Sarajevo','Sarajevo','4545664','fagic1','123456',1);
 INSERT INTO "USERS" VALUES(3,'Jasmin','Hodžić',3231331,'Bihać','Sarajevo','66567578','jhodzic1','123456',0);
 CREATE TABLE "STUDENTS" (
 	"ID"	INTEGER,
