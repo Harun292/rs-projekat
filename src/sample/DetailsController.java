@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,6 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class DetailsController {
 
@@ -72,14 +74,27 @@ public class DetailsController {
     }
     public void deleteDetails() throws SQLException {
         if(studentTableView.getSelectionModel().getSelectedItem()!=null){
-
-            model.deleteGradeBase(student,studentTableView.getSelectionModel().getSelectedItem());
-            model.getById(student.getId()).getGrades().remove(studentTableView.getSelectionModel().getSelectedItem());
-            grades=FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
-            studentTableView.setItems(grades);
-            studentTableView.refresh();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Do you want to delete grade: " + studentTableView.getSelectionModel().getSelectedItem().getSubject().toString());
+            ButtonType buttonType = new ButtonType("Yes");
+            ButtonType buttonType1=new ButtonType("No");
+            alert.getButtonTypes().setAll(buttonType,buttonType1);
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get()==buttonType) {
+                model.deleteGradeBase(student,studentTableView.getSelectionModel().getSelectedItem());
+                model.getById(student.getId()).getGrades().remove(studentTableView.getSelectionModel().getSelectedItem());
+                grades=FXCollections.observableArrayList(model.getById(student.getId()).getGrades());
+                studentTableView.setItems(grades);
+                studentTableView.refresh();
+            }
+            else
+                alert.close();
         }
-        else return;
+
+        else {
+            return;
+
+        }
     }
 
 

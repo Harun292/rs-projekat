@@ -25,7 +25,7 @@ public class Model {
     private PreparedStatement getUsersStmnt,getStudentsStmnt,getSubjectsStmnt,getGradesStmnt,getProfessorStmnt,getSubjectStmnt,getIdUsersStmnt,getIdStudentsStmnt,getIdSubjectsStmnt,getIdGradesStmnt;
     private PreparedStatement addPersonStmnt,addStudentStmnt,addSubjectStmnt,addGradeStmnt;
     private PreparedStatement updatePersonStmnt,updateStudentStmnt;
-    private PreparedStatement deleteGrade2Stmnt,deletePersonStmnt,deleteStudentStmnt,deleteSubjectStmnt,deleteGradeStmnt,deleteGrade1Stmnt;
+    private PreparedStatement deleteGrade2Stmnt,deletePersonStmnt,deleteStudentStmnt,deleteSubject1Stmnt,deleteSubjectStmnt,deleteGradeStmnt,deleteGrade1Stmnt;
     private Model() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:base.db");
@@ -60,6 +60,7 @@ public class Model {
             addGradeStmnt=connection.prepareStatement("INSERT INTO GRADES VALUES(?,?,?,?,?)");
             deleteGrade1Stmnt=connection.prepareStatement("DELETE FROM GRADES WHERE SUBJ_ID=?");
             deleteGrade2Stmnt=connection.prepareStatement("DELETE FROM GRADES WHERE STUD_ID=?");
+            deleteSubject1Stmnt=connection.prepareStatement("DELETE FROM SUBJECTS WHERE ID=?");
             } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -260,14 +261,12 @@ public class Model {
             Professor pr= (Professor) person;
             int pomoc=0;
             for (Subject sub:pr.getSubjects()) {
-                System.out.println(sub.getProfessor().toString());
                if(sub.getProfessor().getId()==person.getId()){
-                   System.out.println("nesto");
                    pomoc=sub.getId();
                    deleteGrade1Stmnt.setInt(1,pomoc);
                    deleteGrade1Stmnt.executeUpdate();
                }
-                System.out.println(pomoc);
+
             }
             if(pomoc==0){
                 deletePersonStmnt.executeUpdate();
@@ -287,10 +286,10 @@ public class Model {
         addSubjectStmnt.executeUpdate();
     }
     public void deleteSubjectBase(Subject subject) throws SQLException {
-        deleteSubjectStmnt.setInt(1,subject.getId());
+        deleteSubject1Stmnt.setInt(1,subject.getId());
         deleteGrade1Stmnt.setInt(1,subject.getId());
         deleteGrade1Stmnt.executeUpdate();
-        deleteSubjectStmnt.executeUpdate();
+        deleteSubject1Stmnt.executeUpdate();
     }
     public void addGradeBase(Student student,Grades grade) throws SQLException {
         ResultSet rs=getIdGradesStmnt.executeQuery();
@@ -303,7 +302,7 @@ public class Model {
         addGradeStmnt.executeUpdate();
     }
     public void deleteGradeBase(Student student,Grades grade) throws SQLException {
-        deleteGradeStmnt.setInt(1,grade.getId());
+        deleteGradeStmnt.setInt(1,grade.getSubject().getId());
         deleteGradeStmnt.setInt(2,student.getId());
         deleteGradeStmnt.executeUpdate();
     }

@@ -12,13 +12,13 @@ CREATE TABLE "USERS" (
 	"TYPE"	INTEGER,
    PRIMARY KEY("id")
 );
-INSERT INTO "USERS" VALUES(1,'Harun','Ajkuinić',date('29-02-2000'),'Travnik','Sarajevo','1231231312','hajkunic1','123456',1);
-INSERT INTO "USERS" VALUES(2,'Mirza','Gojak',date('11-02-1998'),'Sarajevo','Sarajevo','4545664','mgojak1','123456',1);
-INSERT INTO "USERS" VALUES(3,'Jasmin','Hodžić',date('29-06-2000'),'Bihać','Sarajevo','66567578','jhodzic1','123456',0);
+INSERT INTO "USERS" VALUES(1,'Harun','Ajkuinić',3233232,'Travnik','Sarajevo','1231231312','hajkunic1','123456',1);
+INSERT INTO "USERS" VALUES(2,'Faris','Agić',323233,'Sarajevo','Sarajevo','4545664','fagic3','123456',1);
+INSERT INTO "USERS" VALUES(3,'Jasmin','Hodžić',3231331,'Bihać','Sarajevo','66567578','jhodzic1','123456',0);
 CREATE TABLE "STUDENTS" (
 	"ID"	INTEGER,
 	"USER_ID"	INTEGER,
-	"INDEX"	INTEGER,
+	"INDKS"	INTEGER,
 	"IMAGE"	TEXT,
 	"MOTHERS_NAME"	TEXT,
 	"FATHERS_NAME"	TEXT,

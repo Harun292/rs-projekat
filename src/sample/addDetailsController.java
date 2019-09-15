@@ -28,21 +28,21 @@ public class addDetailsController {
         addDetailsField.getStyleClass().addAll("invalid");
         cbAddSubject.setItems(model.getSubjects());
         addDetailsField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (addDetailsField.getText().isEmpty()&&!(Integer.parseInt(addDetailsField.getText())>=0&&Integer.parseInt(addDetailsField.getText())<=100)) {
+            if (!addDetailsField.getText().isEmpty()&&!(Integer.parseInt(addDetailsField.getText())>100||Integer.parseInt(addDetailsField.getText())<0)) {
                 addDetailsField.getStyleClass().addAll("invalid");
-                ok=false;
+                ok=true;
             } else {
                 addDetailsField.getStyleClass().removeAll("invalid");
-                ok=true;
+                ok=false;
             }
         });
         addGradeField.textProperty().addListener((obs, oldIme, newIme) -> {
-            if (addGradeField.getText().isEmpty()&&!(Integer.parseInt(addGradeField.getText())>=0&&Integer.parseInt(addGradeField.getText())<=10)) {
-                addGradeField.getStyleClass().addAll("invalid");
-                ok1=false;
-            } else {
+            if (!addGradeField.getText().isEmpty()&&!(Integer.parseInt(addGradeField.getText())>10||Integer.parseInt(addGradeField.getText())<5)) {
                 addGradeField.getStyleClass().removeAll("invalid");
                 ok1=true;
+            } else {
+                addGradeField.getStyleClass().addAll("invalid");
+                ok1=false;
             }
         });
         cbAddSubject.valueProperty().addListener((obs, oldIme, newIme) -> {

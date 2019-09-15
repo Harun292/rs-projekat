@@ -29,6 +29,7 @@ public class Person {
         this.id=model.getNextUserId();
     }
 
+
     public Person(String name, String surname, String jmbg, String placeOfBirth, String livingPlace, LocalDate dateOfBirth,int id,String username,String password) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
