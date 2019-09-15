@@ -29,10 +29,10 @@ public class addDetailsController {
         cbAddSubject.setItems(model.getSubjects());
         addDetailsField.textProperty().addListener((obs, oldIme, newIme) -> {
             if (!addDetailsField.getText().isEmpty()&&!(Integer.parseInt(addDetailsField.getText())>100||Integer.parseInt(addDetailsField.getText())<0)) {
-                addDetailsField.getStyleClass().addAll("invalid");
+                addDetailsField.getStyleClass().removeAll("invalid");
                 ok=true;
             } else {
-                addDetailsField.getStyleClass().removeAll("invalid");
+                addDetailsField.getStyleClass().addAll("invalid");
                 ok=false;
             }
         });
